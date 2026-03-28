@@ -93,7 +93,7 @@ class MetricTracker:
             self.values[k].append(v)
 
     def summary(self):
-        return {k: np.mean(v) for k, v in self.values.items()}
+        return {k: float(np.mean(v)) for k, v in self.values.items()}
 
     def __str__(self):
         s = self.summary()
