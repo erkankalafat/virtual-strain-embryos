@@ -105,21 +105,20 @@ class MSSSIMLoss(nn.Module):
             if i < levels - 1:
                 pred = F.avg_pool2d(pred, 2)
                 target = F.avg_pool2d(target, 2)
-                # Recreate window for smaller size if needed
                 if pred.size(-1) < self.window_size:
                     break
 
-        # Weight and combine
-        weights = torch.tensor(self.weights[:len(mcs)], device=pred.device)
+        # Weight and combine (clamp to avoid NaN from negative ** fraction)
+        n = len(mcs)
+        weights = torch.tensor(self.weights[:n], device=pred.device)
         weights = weights / weights.sum()
 
-        mcs_tensor = torch.stack(mcs)
-        mssim_tensor = torch.stack(mssim)
+        mcs_tensor = torch.stack(mcs).clamp(min=1e-8)
+        mssim_tensor = torch.stack(mssim).clamp(min=1e-8)
 
-        # Product of contrast sensitivity at all scales, times luminance at final scale
         result = torch.prod(mcs_tensor[:-1] ** weights[:-1]) * (mssim_tensor[-1] ** weights[-1])
 
-        return 1.0 - result
+        return 1.0 - result.clamp(min=0.0, max=1.0)
 
     def _ssim_components(self, img1, img2, window, channel):
         """Return SSIM and contrast sensitivity separately."""

@@ -218,6 +218,12 @@ def train_regression(config):
             else:
                 loss, breakdown = loss_val, {"total": loss_val.item()}
 
+            # Skip batch if loss is NaN (bad image / numerical issue)
+            if torch.isnan(loss) or torch.isinf(loss):
+                tqdm.write(f"  WARNING: NaN/Inf loss at batch, skipping")
+                optimizer.zero_grad()
+                continue
+
             loss.backward()
             nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             optimizer.step()
