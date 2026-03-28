@@ -1,0 +1,48 @@
+# TransUNet Regression - Virtual Staining
+# BF -> DAPI + Phalloidin (paired, pixel-aligned)
+# python -m src.train --config configs/transunet.yaml
+
+model:
+  name: transunet
+  in_channels: 3         # BF (replicated to 3ch for pretrained encoder compatibility)
+  out_channels: 2        # DAPI + Phalloidin
+  img_size: 512
+  patch_size: 16
+  embed_dim: 768
+  depth: 12
+  num_heads: 12
+  mlp_ratio: 4.0
+
+data:
+  root_dir: /content/drive/MyDrive/embryo_data  # Update to your data path
+  target_channels: both   # 'both' = DAPI + Phalloidin as 2-channel output
+  img_size: 512
+  batch_size: 4
+  num_workers: 4
+  val_split: 0.15
+  test_split: 0.10
+  seed: 42
+  z_slices: null          # null = use all z-slices
+
+loss:
+  type: combined
+  losses:
+    - name: l1
+      weight: 1.0
+    - name: ms_ssim
+      weight: 0.1
+    - name: perceptual
+      weight: 0.05
+
+optimizer:
+  lr: 2.0e-4
+  weight_decay: 1.0e-4
+
+scheduler:
+  min_lr: 1.0e-6
+
+training:
+  epochs: 100
+  amp: true
+  output_dir: outputs
+  save_every: 10

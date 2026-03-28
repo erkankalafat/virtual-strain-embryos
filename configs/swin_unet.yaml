@@ -1,0 +1,47 @@
+# SwinUNet Regression - Virtual Staining
+# Better at capturing local details via window attention
+# python -m src.train --config configs/swin_unet.yaml
+
+model:
+  name: swin_unet
+  in_channels: 3
+  out_channels: 2
+  img_size: 512
+  embed_dim: 96
+  depths: [2, 2, 6, 2]
+  num_heads: [3, 6, 12, 24]
+  window_size: 8
+  patch_size: 4
+
+data:
+  root_dir: /content/drive/MyDrive/embryo_data
+  target_channels: both
+  img_size: 512
+  batch_size: 4
+  num_workers: 4
+  val_split: 0.15
+  test_split: 0.10
+  seed: 42
+
+loss:
+  type: combined
+  losses:
+    - name: l1
+      weight: 1.0
+    - name: ms_ssim
+      weight: 0.1
+    - name: perceptual
+      weight: 0.05
+
+optimizer:
+  lr: 2.0e-4
+  weight_decay: 1.0e-4
+
+scheduler:
+  min_lr: 1.0e-6
+
+training:
+  epochs: 100
+  amp: true
+  output_dir: outputs
+  save_every: 10

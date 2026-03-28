@@ -1,0 +1,48 @@
+# Pix2PixHD - Virtual Staining with Adversarial Training
+# Paired conditional GAN: BF -> IF with multi-scale discriminator
+# python -m src.train --config configs/pix2pixhd.yaml
+
+model:
+  name: pix2pixhd
+  in_channels: 3
+  out_channels: 2
+  ngf: 64                 # Generator base filters
+  ndf: 64                 # Discriminator base filters
+  n_downsample: 4         # Downsampling layers in generator
+  n_blocks: 9             # ResNet blocks in generator
+  n_discriminators: 2     # Multi-scale discriminator count
+  use_local_enhancer: false
+
+data:
+  root_dir: /content/drive/MyDrive/embryo_data
+  target_channels: both
+  img_size: 512
+  batch_size: 4
+  num_workers: 4
+  val_split: 0.15
+  test_split: 0.10
+  seed: 42
+
+loss:
+  type: combined
+  # Reconstruction loss (used alongside GAN + feature matching)
+  losses:
+    - name: l1
+      weight: 1.0
+    - name: perceptual
+      weight: 0.05
+  lambda_gan: 1.0          # GAN loss weight
+  lambda_fm: 10.0          # Feature matching loss weight
+  lambda_recon: 10.0       # Reconstruction loss weight
+
+optimizer:
+  lr_g: 2.0e-4
+  lr_d: 2.0e-4
+  beta1: 0.5
+  beta2: 0.999
+
+training:
+  epochs: 200
+  amp: false               # GANs can be unstable with AMP
+  output_dir: outputs
+  save_every: 20
