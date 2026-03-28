@@ -20,9 +20,10 @@ from pathlib import Path
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.cuda.amp import GradScaler, autocast
 import yaml
 import numpy as np
+
+from tqdm.auto import tqdm
 
 from src.data import get_dataloaders
 from src.models import build_model
@@ -70,6 +71,61 @@ def save_sample_images(pred, target, bf, epoch, output_dir):
         pass  # Don't fail training over visualization
 
 
+class HistoryTracker:
+    """Track and display training history across epochs."""
+
+    def __init__(self):
+        self.history = {}
+
+    def log(self, epoch, **kwargs):
+        for k, v in kwargs.items():
+            if k not in self.history:
+                self.history[k] = []
+            self.history[k].append(v)
+
+    def plot(self):
+        """Display training curves inline (works in Colab)."""
+        try:
+            import matplotlib.pyplot as plt
+            from IPython.display import display, clear_output
+
+            n_metrics = len(self.history)
+            if n_metrics == 0:
+                return
+
+            clear_output(wait=True)
+            fig, axes = plt.subplots(1, min(n_metrics, 4), figsize=(5 * min(n_metrics, 4), 4))
+            if n_metrics == 1:
+                axes = [axes]
+
+            for ax, (name, values) in zip(axes, list(self.history.items())[:4]):
+                ax.plot(range(1, len(values) + 1), values, linewidth=1.5)
+                ax.set_title(name)
+                ax.set_xlabel("Epoch")
+                ax.grid(True, alpha=0.3)
+                # Mark best
+                if "loss" in name.lower() or "mae" in name.lower():
+                    best_idx = np.argmin(values)
+                else:
+                    best_idx = np.argmax(values)
+                ax.axvline(best_idx + 1, color="red", linestyle="--", alpha=0.5, label=f"Best: {values[best_idx]:.4f}")
+                ax.legend(fontsize=8)
+
+            plt.tight_layout()
+            display(fig)
+            plt.close(fig)
+        except ImportError:
+            pass  # Not in notebook environment
+
+    def print_summary(self):
+        """Print a compact summary table of the last epoch."""
+        if not self.history:
+            return
+        last = {k: v[-1] for k, v in self.history.items()}
+        parts = [f"{k}: {v:.4f}" for k, v in last.items()]
+        print(" | ".join(parts))
+
+
 # ---------------------------------------------------------------------------
 # Training loops
 # ---------------------------------------------------------------------------
@@ -105,44 +161,44 @@ def train_regression(config):
         eta_min=sched_cfg.get("min_lr", 1e-6),
     )
 
-    # Mixed precision
-    use_amp = config["training"].get("amp", True)
-    scaler = GradScaler(enabled=use_amp)
-
     # Output
     output_dir = Path(config["training"].get("output_dir", "outputs")) / config["model"]["name"]
     output_dir.mkdir(parents=True, exist_ok=True)
 
     best_val_loss = float("inf")
     epochs = config["training"]["epochs"]
+    history = HistoryTracker()
 
-    for epoch in range(1, epochs + 1):
+    epoch_pbar = tqdm(range(1, epochs + 1), desc="Training", unit="epoch")
+    for epoch in epoch_pbar:
         # --- Train ---
         model.train()
         train_metrics = MetricTracker()
         epoch_loss = 0.0
 
-        for batch in train_loader:
+        batch_pbar = tqdm(train_loader, desc=f"Epoch {epoch}/{epochs} [Train]",
+                          leave=False, unit="batch")
+        for batch in batch_pbar:
             bf = batch["bf"].to(device)
             target = batch["target"].to(device)
 
             optimizer.zero_grad()
-            with autocast(enabled=use_amp):
-                pred = model(bf)
-                loss_val = criterion(pred, target)
-                if isinstance(loss_val, tuple):
-                    loss, breakdown = loss_val
-                else:
-                    loss, breakdown = loss_val, {"total": loss_val.item()}
+            pred = model(bf)
+            loss_val = criterion(pred, target)
+            if isinstance(loss_val, tuple):
+                loss, breakdown = loss_val
+            else:
+                loss, breakdown = loss_val, {"total": loss_val.item()}
 
-            scaler.scale(loss).backward()
-            scaler.unscale_(optimizer)
+            loss.backward()
             nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
-            scaler.step(optimizer)
-            scaler.update()
+            optimizer.step()
 
             epoch_loss += loss.item()
             train_metrics.update(compute_metrics(pred, target))
+
+            # Update batch progress bar
+            batch_pbar.set_postfix(loss=f"{loss.item():.4f}")
 
         scheduler.step()
         avg_train_loss = epoch_loss / len(train_loader)
@@ -152,18 +208,19 @@ def train_regression(config):
         val_metrics = MetricTracker()
         val_loss = 0.0
 
+        val_pbar = tqdm(val_loader, desc=f"Epoch {epoch}/{epochs} [Val]",
+                        leave=False, unit="batch")
         with torch.no_grad():
-            for batch in val_loader:
+            for batch in val_pbar:
                 bf = batch["bf"].to(device)
                 target = batch["target"].to(device)
 
-                with autocast(enabled=use_amp):
-                    pred = model(bf)
-                    loss_val = criterion(pred, target)
-                    if isinstance(loss_val, tuple):
-                        loss, _ = loss_val
-                    else:
-                        loss = loss_val
+                pred = model(bf)
+                loss_val = criterion(pred, target)
+                if isinstance(loss_val, tuple):
+                    loss, _ = loss_val
+                else:
+                    loss = loss_val
 
                 val_loss += loss.item()
                 val_metrics.update(compute_metrics(pred, target))
@@ -177,17 +234,25 @@ def train_regression(config):
         # Log
         t_summary = train_metrics.summary()
         v_summary = val_metrics.summary()
-        print(
-            f"Epoch {epoch}/{epochs} | "
-            f"Train Loss: {avg_train_loss:.4f} | "
-            f"Val Loss: {avg_val_loss:.4f} | "
-            f"Val PSNR: {v_summary.get('psnr', 0):.2f} | "
-            f"Val SSIM: {v_summary.get('ssim', 0):.4f} | "
-            f"LR: {scheduler.get_last_lr()[0]:.2e}"
+
+        history.log(epoch,
+                    train_loss=avg_train_loss,
+                    val_loss=avg_val_loss,
+                    val_psnr=v_summary.get("psnr", 0),
+                    val_ssim=v_summary.get("ssim", 0))
+
+        # Update epoch progress bar
+        epoch_pbar.set_postfix(
+            train_loss=f"{avg_train_loss:.4f}",
+            val_loss=f"{avg_val_loss:.4f}",
+            psnr=f"{v_summary.get('psnr', 0):.2f}",
+            ssim=f"{v_summary.get('ssim', 0):.4f}",
+            lr=f"{scheduler.get_last_lr()[0]:.2e}",
         )
 
         # Checkpoint
-        if avg_val_loss < best_val_loss:
+        is_best = avg_val_loss < best_val_loss
+        if is_best:
             best_val_loss = avg_val_loss
             save_checkpoint({
                 "epoch": epoch,
@@ -197,7 +262,7 @@ def train_regression(config):
                 "val_metrics": v_summary,
                 "config": config,
             }, str(output_dir / "best_model.pth"))
-            print(f"  -> Best model saved (val_loss: {avg_val_loss:.4f})")
+            tqdm.write(f"  Epoch {epoch}: Best model saved (val_loss: {avg_val_loss:.4f})")
 
         # Periodic checkpoint
         if epoch % config["training"].get("save_every", 10) == 0:
@@ -208,8 +273,13 @@ def train_regression(config):
                 "config": config,
             }, str(output_dir / f"checkpoint_epoch_{epoch:03d}.pth"))
 
+        # Plot curves every 5 epochs
+        if epoch % 5 == 0 or epoch == epochs:
+            history.plot()
+
     print(f"\nTraining complete. Best val loss: {best_val_loss:.4f}")
     print(f"Outputs saved to: {output_dir}")
+    return history
 
 
 def train_gan(config):
@@ -254,13 +324,17 @@ def train_gan(config):
 
     epochs = config["training"]["epochs"]
     best_val_psnr = 0.0
+    history = HistoryTracker()
 
-    for epoch in range(1, epochs + 1):
+    epoch_pbar = tqdm(range(1, epochs + 1), desc="Pix2PixHD Training", unit="epoch")
+    for epoch in epoch_pbar:
         generator.train()
         discriminator.train()
         g_losses, d_losses = [], []
 
-        for batch in train_loader:
+        batch_pbar = tqdm(train_loader, desc=f"Epoch {epoch}/{epochs}",
+                          leave=False, unit="batch")
+        for batch in batch_pbar:
             bf = batch["bf"].to(device)
             target = batch["target"].to(device)
 
@@ -310,6 +384,8 @@ def train_gan(config):
             opt_G.step()
             g_losses.append(g_loss.item())
 
+            batch_pbar.set_postfix(G=f"{g_loss.item():.3f}", D=f"{d_loss.item():.3f}")
+
         # --- Validate ---
         generator.eval()
         val_metrics = MetricTracker()
@@ -324,10 +400,17 @@ def train_gan(config):
                     save_sample_images(pred, target, bf, epoch, str(output_dir / "samples"))
 
         v = val_metrics.summary()
-        print(
-            f"Epoch {epoch}/{epochs} | "
-            f"G Loss: {np.mean(g_losses):.4f} | D Loss: {np.mean(d_losses):.4f} | "
-            f"Val PSNR: {v.get('psnr', 0):.2f} | Val SSIM: {v.get('ssim', 0):.4f}"
+
+        history.log(epoch,
+                    g_loss=np.mean(g_losses),
+                    d_loss=np.mean(d_losses),
+                    val_psnr=v.get("psnr", 0),
+                    val_ssim=v.get("ssim", 0))
+
+        epoch_pbar.set_postfix(
+            G=f"{np.mean(g_losses):.4f}",
+            D=f"{np.mean(d_losses):.4f}",
+            psnr=f"{v.get('psnr', 0):.2f}",
         )
 
         if v.get("psnr", 0) > best_val_psnr:
@@ -339,9 +422,13 @@ def train_gan(config):
                 "val_metrics": v,
                 "config": config,
             }, str(output_dir / "best_model.pth"))
-            print(f"  -> Best model saved (PSNR: {best_val_psnr:.2f})")
+            tqdm.write(f"  Epoch {epoch}: Best model saved (PSNR: {best_val_psnr:.2f})")
+
+        if epoch % 5 == 0 or epoch == epochs:
+            history.plot()
 
     print(f"\nTraining complete. Best val PSNR: {best_val_psnr:.2f}")
+    return history
 
 
 def train_diffusion(config):
@@ -365,34 +452,33 @@ def train_diffusion(config):
         eta_min=opt_cfg.get("min_lr", 1e-6),
     )
 
-    use_amp = config["training"].get("amp", False)  # Diffusion can be tricky with AMP
-    scaler = GradScaler(enabled=use_amp)
-
     output_dir = Path(config["training"].get("output_dir", "outputs")) / "diffusion"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     epochs = config["training"]["epochs"]
     best_val_loss = float("inf")
+    history = HistoryTracker()
 
-    for epoch in range(1, epochs + 1):
+    epoch_pbar = tqdm(range(1, epochs + 1), desc="DDPM Training", unit="epoch")
+    for epoch in epoch_pbar:
         model.train()
         epoch_loss = 0.0
 
-        for batch in train_loader:
+        batch_pbar = tqdm(train_loader, desc=f"Epoch {epoch}/{epochs}",
+                          leave=False, unit="batch")
+        for batch in batch_pbar:
             bf = batch["bf"].to(device)
             target = batch["target"].to(device)
 
             optimizer.zero_grad()
-            with autocast(enabled=use_amp):
-                loss = model.training_loss(target, bf)
+            loss = model.training_loss(target, bf)
 
-            scaler.scale(loss).backward()
-            scaler.unscale_(optimizer)
+            loss.backward()
             nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
-            scaler.step(optimizer)
-            scaler.update()
+            optimizer.step()
 
             epoch_loss += loss.item()
+            batch_pbar.set_postfix(loss=f"{loss.item():.4f}")
 
         scheduler.step()
         avg_loss = epoch_loss / len(train_loader)
@@ -420,11 +506,16 @@ def train_diffusion(config):
         avg_val_loss = val_loss / max(len(val_loader), 1)
         v = val_metrics.summary()
 
-        print(
-            f"Epoch {epoch}/{epochs} | "
-            f"Train Loss: {avg_loss:.4f} | Val Loss: {avg_val_loss:.4f} | "
-            f"Sample PSNR: {v.get('psnr', 0):.2f} | "
-            f"LR: {scheduler.get_last_lr()[0]:.2e}"
+        history.log(epoch,
+                    train_loss=avg_loss,
+                    val_loss=avg_val_loss,
+                    sample_psnr=v.get("psnr", 0))
+
+        epoch_pbar.set_postfix(
+            train=f"{avg_loss:.4f}",
+            val=f"{avg_val_loss:.4f}",
+            psnr=f"{v.get('psnr', 0):.2f}",
+            lr=f"{scheduler.get_last_lr()[0]:.2e}",
         )
 
         if avg_val_loss < best_val_loss:
@@ -435,9 +526,13 @@ def train_diffusion(config):
                 "val_loss": avg_val_loss,
                 "config": config,
             }, str(output_dir / "best_model.pth"))
-            print(f"  -> Best model saved")
+            tqdm.write(f"  Epoch {epoch}: Best model saved")
+
+        if epoch % 5 == 0 or epoch == epochs:
+            history.plot()
 
     print(f"\nDiffusion training complete. Best val loss: {best_val_loss:.4f}")
+    return history
 
 
 def train_style_transfer(config):
@@ -472,12 +567,16 @@ def train_style_transfer(config):
 
     epochs = config["training"]["epochs"]
     best_val_loss = float("inf")
+    history = HistoryTracker()
 
-    for epoch in range(1, epochs + 1):
+    epoch_pbar = tqdm(range(1, epochs + 1), desc="AdaIN Training", unit="epoch")
+    for epoch in epoch_pbar:
         model.train()
         epoch_loss = 0.0
 
-        for batch in train_loader:
+        batch_pbar = tqdm(train_loader, desc=f"Epoch {epoch}/{epochs}",
+                          leave=False, unit="batch")
+        for batch in batch_pbar:
             bf = batch["bf"].to(device)       # Content (BF)
             target = batch["target"].to(device)  # Style reference (IF)
 
@@ -488,6 +587,7 @@ def train_style_transfer(config):
             optimizer.step()
 
             epoch_loss += loss.item()
+            batch_pbar.set_postfix(loss=f"{loss.item():.4f}")
 
         scheduler.step()
         avg_loss = epoch_loss / len(train_loader)
@@ -513,10 +613,16 @@ def train_style_transfer(config):
         avg_val_loss = val_loss / max(len(val_loader), 1)
         v = val_metrics.summary()
 
-        print(
-            f"Epoch {epoch}/{epochs} | "
-            f"Train Loss: {avg_loss:.4f} | Val Loss: {avg_val_loss:.4f} | "
-            f"Val PSNR: {v.get('psnr', 0):.2f} | Val SSIM: {v.get('ssim', 0):.4f}"
+        history.log(epoch,
+                    train_loss=avg_loss,
+                    val_loss=avg_val_loss,
+                    val_psnr=v.get("psnr", 0),
+                    val_ssim=v.get("ssim", 0))
+
+        epoch_pbar.set_postfix(
+            train=f"{avg_loss:.4f}",
+            val=f"{avg_val_loss:.4f}",
+            psnr=f"{v.get('psnr', 0):.2f}",
         )
 
         if avg_val_loss < best_val_loss:
@@ -527,9 +633,13 @@ def train_style_transfer(config):
                 "val_loss": avg_val_loss,
                 "config": config,
             }, str(output_dir / "best_model.pth"))
-            print(f"  -> Best model saved")
+            tqdm.write(f"  Epoch {epoch}: Best model saved")
+
+        if epoch % 5 == 0 or epoch == epochs:
+            history.plot()
 
     print(f"\nStyle transfer training complete. Best val loss: {best_val_loss:.4f}")
+    return history
 
 
 # ---------------------------------------------------------------------------

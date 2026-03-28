@@ -42,6 +42,6 @@ scheduler:
 
 training:
   epochs: 100
-  amp: true
+  amp: false
   output_dir: outputs
   save_every: 10
