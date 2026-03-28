@@ -4,5 +4,6 @@ from .losses import (
     PerceptualLoss,
     CombinedLoss,
     GANLoss,
+    FeatureMatchingLoss,
     build_loss,
 )
