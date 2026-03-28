@@ -153,6 +153,38 @@ class L1Loss(nn.Module):
         return F.l1_loss(pred, target)
 
 
+class WeightedL1Loss(nn.Module):
+    """L1 loss that upweights non-zero (signal) pixels.
+
+    For sparse IF targets (>98% black), standard L1 barely penalizes
+    missing the rare bright pixels. This loss applies a higher weight
+    to pixels where the target has signal.
+
+    Args:
+        signal_weight: Multiplier for pixels where target > threshold.
+        bg_weight: Multiplier for background pixels.
+        threshold: Value above which a pixel is considered signal.
+    """
+
+    def __init__(self, signal_weight=10.0, bg_weight=1.0, threshold=0.01):
+        super().__init__()
+        self.signal_weight = signal_weight
+        self.bg_weight = bg_weight
+        self.threshold = threshold
+
+    def forward(self, pred, target):
+        pixel_loss = torch.abs(pred - target)
+
+        # Create weight map: high weight where target has signal
+        weight = torch.where(
+            target > self.threshold,
+            torch.full_like(target, self.signal_weight),
+            torch.full_like(target, self.bg_weight),
+        )
+
+        return (pixel_loss * weight).mean()
+
+
 # ---------------------------------------------------------------------------
 # Perceptual (VGG) Loss
 # ---------------------------------------------------------------------------
@@ -277,6 +309,7 @@ class CombinedLoss(nn.Module):
 
     LOSS_MAP = {
         "l1": L1Loss,
+        "weighted_l1": WeightedL1Loss,
         "ms_ssim": MSSSIMLoss,
         "perceptual": PerceptualLoss,
     }

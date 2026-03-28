@@ -26,12 +26,14 @@ data:
 loss:
   type: combined
   losses:
-    - name: l1
+    - name: weighted_l1
       weight: 1.0
-    - name: ms_ssim
-      weight: 0.1
-    - name: perceptual
-      weight: 0.05
+      params:
+        signal_weight: 10.0
+        bg_weight: 1.0
+        threshold: 0.01
+    - name: l1
+      weight: 0.5
 
 optimizer:
   lr: 2.0e-4
