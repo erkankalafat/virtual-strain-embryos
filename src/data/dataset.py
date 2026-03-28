@@ -393,15 +393,12 @@ def get_dataloaders(config):
     print(f"  Test:  {len(test_projects)} embryos, {len(test_indices)} images — {test_projects}")
 
     from torch.utils.data import Subset
+    import copy
 
-    # Create separate dataset instances for train (with augmentation) and val/test (without)
-    train_dataset = EmbryoDataset(
-        root_dir=data_cfg["root_dir"],
-        target_channels=data_cfg.get("target_channels", "both"),
-        img_size=data_cfg.get("img_size", 512),
-        augment=True,
-        z_slices=data_cfg.get("z_slices"),
-    )
+    # Create a shallow copy for training with augmentation enabled
+    # (avoids re-scanning all project folders from Drive)
+    train_dataset = copy.copy(full_dataset)
+    train_dataset.augment = True
 
     train_ds = Subset(train_dataset, train_indices)
     val_ds = Subset(full_dataset, val_indices)    # full_dataset has augment=False
