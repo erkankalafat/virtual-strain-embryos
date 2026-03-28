@@ -394,21 +394,18 @@ def get_dataloaders(config):
 
     from torch.utils.data import Subset
 
-    train_ds = Subset(full_dataset, train_indices)
-    val_ds = Subset(full_dataset, val_indices)
+    # Create separate dataset instances for train (with augmentation) and val/test (without)
+    train_dataset = EmbryoDataset(
+        root_dir=data_cfg["root_dir"],
+        target_channels=data_cfg.get("target_channels", "both"),
+        img_size=data_cfg.get("img_size", 512),
+        augment=True,
+        z_slices=data_cfg.get("z_slices"),
+    )
+
+    train_ds = Subset(train_dataset, train_indices)
+    val_ds = Subset(full_dataset, val_indices)    # full_dataset has augment=False
     test_ds = Subset(full_dataset, test_indices)
-
-    # Enable augmentation only for training
-    # (augment flag is checked per-call in __getitem__, so we wrap with a flag)
-    class AugmentedSubset(Subset):
-        """Subset that enables augmentation on access."""
-        def __getitem__(self, idx):
-            self.dataset.augment = True
-            item = super().__getitem__(idx)
-            self.dataset.augment = False
-            return item
-
-    train_ds = AugmentedSubset(full_dataset, train_indices)
 
     batch_size = data_cfg.get("batch_size", 4)
     num_workers = data_cfg.get("num_workers", 4)
@@ -422,8 +419,8 @@ def get_dataloaders(config):
         num_workers=num_workers, pin_memory=True,
     )
     test_loader = DataLoader(
-        test_ds, batch_size=max(1, len(test_indices)) if len(test_indices) > 0 else 1,
-        shuffle=False, num_workers=num_workers, pin_memory=True,
+        test_ds, batch_size=1, shuffle=False,
+        num_workers=num_workers, pin_memory=True,
     )
 
     return train_loader, val_loader, test_loader
