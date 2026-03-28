@@ -504,6 +504,7 @@ class ConditionalDDPM(nn.Module):
             out_channels=self.out_channels,
             base_channels=base_channels,
             channel_mults=channel_mults,
+            cond_channels=self.condition_encoder.feature_channels,
             num_res_blocks=num_res_blocks,
             time_dim=time_dim,
             attn_resolutions=attn_resolutions,
