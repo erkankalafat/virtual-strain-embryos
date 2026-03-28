@@ -71,6 +71,32 @@ def save_sample_images(pred, target, bf, epoch, output_dir):
         pass  # Don't fail training over visualization
 
 
+class EarlyStopping:
+    """Stop training when val loss stops improving.
+
+    Args:
+        patience: Epochs to wait after last improvement before stopping.
+        min_delta: Minimum change to qualify as an improvement.
+    """
+
+    def __init__(self, patience=15, min_delta=1e-4):
+        self.patience = patience
+        self.min_delta = min_delta
+        self.best = float("inf")
+        self.counter = 0
+        self.should_stop = False
+
+    def step(self, val_loss):
+        if val_loss < self.best - self.min_delta:
+            self.best = val_loss
+            self.counter = 0
+        else:
+            self.counter += 1
+            if self.counter >= self.patience:
+                self.should_stop = True
+        return self.should_stop
+
+
 class HistoryTracker:
     """Track and display training history across epochs."""
 
@@ -168,6 +194,8 @@ def train_regression(config):
     best_val_loss = float("inf")
     epochs = config["training"]["epochs"]
     history = HistoryTracker()
+    patience = config["training"].get("patience", 15)
+    early_stop = EarlyStopping(patience=patience)
 
     epoch_pbar = tqdm(range(1, epochs + 1), desc="Training", unit="epoch")
     for epoch in epoch_pbar:
@@ -277,6 +305,12 @@ def train_regression(config):
         if epoch % 5 == 0 or epoch == epochs:
             history.plot()
 
+        # Early stopping
+        if early_stop.step(avg_val_loss):
+            tqdm.write(f"\n  Early stopping at epoch {epoch} (no improvement for {patience} epochs)")
+            history.plot()
+            break
+
     print(f"\nTraining complete. Best val loss: {best_val_loss:.4f}")
     print(f"Outputs saved to: {output_dir}")
     return history
@@ -325,6 +359,8 @@ def train_gan(config):
     epochs = config["training"]["epochs"]
     best_val_psnr = 0.0
     history = HistoryTracker()
+    patience = config["training"].get("patience", 20)  # GANs need more patience
+    early_stop = EarlyStopping(patience=patience)
 
     epoch_pbar = tqdm(range(1, epochs + 1), desc="Pix2PixHD Training", unit="epoch")
     for epoch in epoch_pbar:
@@ -427,6 +463,12 @@ def train_gan(config):
         if epoch % 5 == 0 or epoch == epochs:
             history.plot()
 
+        # Early stopping (monitor -PSNR so higher PSNR = lower "loss")
+        if early_stop.step(-v.get("psnr", 0)):
+            tqdm.write(f"\n  Early stopping at epoch {epoch} (no PSNR improvement for {patience} epochs)")
+            history.plot()
+            break
+
     print(f"\nTraining complete. Best val PSNR: {best_val_psnr:.2f}")
     return history
 
@@ -458,6 +500,8 @@ def train_diffusion(config):
     epochs = config["training"]["epochs"]
     best_val_loss = float("inf")
     history = HistoryTracker()
+    patience = config["training"].get("patience", 25)  # Diffusion converges slowly
+    early_stop = EarlyStopping(patience=patience)
 
     epoch_pbar = tqdm(range(1, epochs + 1), desc="DDPM Training", unit="epoch")
     for epoch in epoch_pbar:
@@ -531,6 +575,11 @@ def train_diffusion(config):
         if epoch % 5 == 0 or epoch == epochs:
             history.plot()
 
+        if early_stop.step(avg_val_loss):
+            tqdm.write(f"\n  Early stopping at epoch {epoch} (no improvement for {patience} epochs)")
+            history.plot()
+            break
+
     print(f"\nDiffusion training complete. Best val loss: {best_val_loss:.4f}")
     return history
 
@@ -568,6 +617,8 @@ def train_style_transfer(config):
     epochs = config["training"]["epochs"]
     best_val_loss = float("inf")
     history = HistoryTracker()
+    patience = config["training"].get("patience", 15)
+    early_stop = EarlyStopping(patience=patience)
 
     epoch_pbar = tqdm(range(1, epochs + 1), desc="AdaIN Training", unit="epoch")
     for epoch in epoch_pbar:
@@ -637,6 +688,11 @@ def train_style_transfer(config):
 
         if epoch % 5 == 0 or epoch == epochs:
             history.plot()
+
+        if early_stop.step(avg_val_loss):
+            tqdm.write(f"\n  Early stopping at epoch {epoch} (no improvement for {patience} epochs)")
+            history.plot()
+            break
 
     print(f"\nStyle transfer training complete. Best val loss: {best_val_loss:.4f}")
     return history
