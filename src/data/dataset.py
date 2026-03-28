@@ -178,6 +178,7 @@ class EmbryoDataset(Dataset):
                         "bf": bf_path,
                         "targets": target_paths,
                         "base_name": base_name,
+                        "project": proj_dir.name,
                     })
 
         return pairs
@@ -292,6 +293,10 @@ class EmbryoDataset(Dataset):
 def get_dataloaders(config):
     """Create train/val/test dataloaders from config dict.
 
+    IMPORTANT: Splits by embryo (project folder), NOT by individual image.
+    All z-slices from the same embryo stay in the same split to prevent
+    data leakage (adjacent z-slices are nearly identical).
+
     Config expected keys:
         data.root_dir: path to data folder
         data.target_channels: 'both', 'dapi', 'phalloidin', 'combined', 'overlay'
@@ -308,23 +313,102 @@ def get_dataloaders(config):
         root_dir=data_cfg["root_dir"],
         target_channels=data_cfg.get("target_channels", "both"),
         img_size=data_cfg.get("img_size", 512),
-        augment=False,  # Will set per-split below
+        augment=False,
         z_slices=data_cfg.get("z_slices"),
     )
 
-    # Split dataset
-    n = len(full_dataset)
-    val_size = int(n * data_cfg.get("val_split", 0.15))
-    test_size = int(n * data_cfg.get("test_split", 0.1))
-    train_size = n - val_size - test_size
+    # --- Split by embryo project, not by image ---
+    # Group image indices by their project folder
+    from collections import OrderedDict
+    project_to_indices = OrderedDict()
+    for idx, pair in enumerate(full_dataset.pairs):
+        proj = pair["project"]
+        if proj not in project_to_indices:
+            project_to_indices[proj] = []
+        project_to_indices[proj].append(idx)
 
-    generator = torch.Generator().manual_seed(data_cfg.get("seed", 42))
-    train_ds, val_ds, test_ds = random_split(
-        full_dataset, [train_size, val_size, test_size], generator=generator
-    )
+    projects = list(project_to_indices.keys())
+    n_projects = len(projects)
 
-    # Enable augmentation for training subset
-    train_ds.dataset.augment = True
+    # Shuffle projects deterministically
+    rng = np.random.RandomState(data_cfg.get("seed", 42))
+    perm = rng.permutation(n_projects)
+    projects_shuffled = [projects[i] for i in perm]
+
+    val_split = data_cfg.get("val_split", 0.15)
+    test_split = data_cfg.get("test_split", 0.1)
+
+    if n_projects >= 3:
+        # Split by project count
+        n_test = max(1, int(n_projects * test_split))
+        n_val = max(1, int(n_projects * val_split))
+        n_train = n_projects - n_val - n_test
+
+        test_projects = projects_shuffled[:n_test]
+        val_projects = projects_shuffled[n_test:n_test + n_val]
+        train_projects = projects_shuffled[n_test + n_val:]
+    elif n_projects == 2:
+        # 2 embryos: one train, one val (no test)
+        train_projects = [projects_shuffled[0]]
+        val_projects = [projects_shuffled[1]]
+        test_projects = []
+    else:
+        # Single embryo: fall back to random image split (z-slice leakage
+        # is unavoidable with 1 embryo, but warn user)
+        print("WARNING: Only 1 embryo found. Splitting by z-slice — "
+              "adjacent slices may leak between splits. "
+              "Add more embryos for proper validation.")
+        n = len(full_dataset)
+        val_size = int(n * val_split)
+        test_size = int(n * test_split)
+        train_size = n - val_size - test_size
+
+        generator = torch.Generator().manual_seed(data_cfg.get("seed", 42))
+        train_ds, val_ds, test_ds = random_split(
+            full_dataset, [train_size, val_size, test_size], generator=generator
+        )
+
+        train_ds.dataset.augment = True
+        batch_size = data_cfg.get("batch_size", 4)
+        num_workers = data_cfg.get("num_workers", 4)
+
+        return (
+            DataLoader(train_ds, batch_size=batch_size, shuffle=True,
+                       num_workers=num_workers, pin_memory=True, drop_last=True),
+            DataLoader(val_ds, batch_size=batch_size, shuffle=False,
+                       num_workers=num_workers, pin_memory=True),
+            DataLoader(test_ds, batch_size=1, shuffle=False,
+                       num_workers=num_workers, pin_memory=True),
+        )
+
+    # Collect indices for each split
+    train_indices = [i for p in train_projects for i in project_to_indices[p]]
+    val_indices = [i for p in val_projects for i in project_to_indices[p]]
+    test_indices = [i for p in test_projects for i in project_to_indices[p]]
+
+    # Print split info
+    print(f"Split by embryo ({n_projects} embryos):")
+    print(f"  Train: {len(train_projects)} embryos, {len(train_indices)} images — {train_projects}")
+    print(f"  Val:   {len(val_projects)} embryos, {len(val_indices)} images — {val_projects}")
+    print(f"  Test:  {len(test_projects)} embryos, {len(test_indices)} images — {test_projects}")
+
+    from torch.utils.data import Subset
+
+    train_ds = Subset(full_dataset, train_indices)
+    val_ds = Subset(full_dataset, val_indices)
+    test_ds = Subset(full_dataset, test_indices)
+
+    # Enable augmentation only for training
+    # (augment flag is checked per-call in __getitem__, so we wrap with a flag)
+    class AugmentedSubset(Subset):
+        """Subset that enables augmentation on access."""
+        def __getitem__(self, idx):
+            self.dataset.augment = True
+            item = super().__getitem__(idx)
+            self.dataset.augment = False
+            return item
+
+    train_ds = AugmentedSubset(full_dataset, train_indices)
 
     batch_size = data_cfg.get("batch_size", 4)
     num_workers = data_cfg.get("num_workers", 4)
@@ -338,8 +422,8 @@ def get_dataloaders(config):
         num_workers=num_workers, pin_memory=True,
     )
     test_loader = DataLoader(
-        test_ds, batch_size=1, shuffle=False,
-        num_workers=num_workers, pin_memory=True,
+        test_ds, batch_size=max(1, len(test_indices)) if len(test_indices) > 0 else 1,
+        shuffle=False, num_workers=num_workers, pin_memory=True,
     )
 
     return train_loader, val_loader, test_loader
