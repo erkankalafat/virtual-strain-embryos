@@ -254,18 +254,51 @@ class EmbryoDataset(Dataset):
             targets.append(tgt)
 
         if self.target_channels == "both":
-            # Stack DAPI + Phalloidin as 2 channels (take first channel of each)
-            target = np.concatenate([t[..., :1] for t in targets], axis=-1)
+            # DAPI signal is in blue channel (ch2), Phalloidin in red channel (ch0)
+            # targets[0] = DAPI image, targets[1] = Phalloidin image
+            dapi = targets[0]
+            phall = targets[1]
+            if dapi.ndim == 3 and dapi.shape[-1] == 3:
+                dapi = dapi[..., 2:3]   # Blue channel for DAPI
+            elif dapi.ndim == 2:
+                dapi = dapi[..., np.newaxis]
+            else:
+                dapi = dapi[..., :1]
+
+            if phall.ndim == 3 and phall.shape[-1] == 3:
+                phall = phall[..., 0:1]  # Red channel for Phalloidin (Texas Red)
+            elif phall.ndim == 2:
+                phall = phall[..., np.newaxis]
+            else:
+                phall = phall[..., :1]
+
+            target = np.concatenate([dapi, phall], axis=-1)
         elif self.target_channels == "overlay":
             target = targets[0]  # Keep all 3 RGB channels
             if target.ndim == 2:
                 target = np.stack([target] * 3, axis=-1)
+        elif self.target_channels == "dapi":
+            target = targets[0]
+            if target.ndim == 3 and target.shape[-1] == 3:
+                target = target[..., 2:3]   # Blue channel
+            elif target.ndim == 2:
+                target = target[..., np.newaxis]
+            else:
+                target = target[..., :1]
+        elif self.target_channels == "phalloidin":
+            target = targets[0]
+            if target.ndim == 3 and target.shape[-1] == 3:
+                target = target[..., 0:1]   # Red channel
+            elif target.ndim == 2:
+                target = target[..., np.newaxis]
+            else:
+                target = target[..., :1]
         else:
             target = targets[0]
             if target.ndim == 2:
                 target = target[..., np.newaxis]
             elif target.shape[-1] > 1:
-                target = target[..., :1]  # Take first channel
+                target = target[..., :1]
 
         # Convert to tensors [C, H, W]
         bf_tensor = torch.from_numpy(bf).permute(2, 0, 1).float()
