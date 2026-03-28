@@ -193,12 +193,16 @@ class ConditionEncoder(nn.Module):
             nn.SiLU(),
         )
 
-        self.down_blocks = nn.ModuleList()
+        # One feature map per UNet encoder level (same resolution & channel
+        # count as the UNet level) so they can be directly concatenated.
+        self.level_blocks = nn.ModuleList()
         self.down_convs = nn.ModuleList()
         ch = base_channels
+        # Store channels for each level so the UNet knows the concat width
+        self.feature_channels: List[int] = []
         for mult in channel_mults:
             out_ch = base_channels * mult
-            self.down_blocks.append(
+            self.level_blocks.append(
                 nn.Sequential(
                     nn.Conv2d(ch, out_ch, 3, padding=1),
                     nn.SiLU(),
@@ -206,15 +210,19 @@ class ConditionEncoder(nn.Module):
                     nn.SiLU(),
                 )
             )
+            self.feature_channels.append(out_ch)
             self.down_convs.append(nn.Conv2d(out_ch, out_ch, 3, stride=2, padding=1))
             ch = out_ch
 
     def forward(self, x: torch.Tensor) -> List[torch.Tensor]:
-        """Return multi-scale feature list from finest to coarsest."""
+        """Return one feature map per UNet level, from level-0 to level-(L-1).
+
+        The i-th feature map has spatial resolution H/2^i x W/2^i and channel
+        count ``feature_channels[i]``.
+        """
         features: List[torch.Tensor] = []
         h = self.input_conv(x)
-        features.append(h)
-        for block, down in zip(self.down_blocks, self.down_convs):
+        for block, down in zip(self.level_blocks, self.down_convs):
             h = block(h)
             features.append(h)
             h = down(h)
@@ -245,6 +253,7 @@ class UNetDenoiser(nn.Module):
         out_channels: int,
         base_channels: int,
         channel_mults: Tuple[int, ...],
+        cond_channels: List[int],
         num_res_blocks: int,
         time_dim: int,
         dropout: float = 0.0,
@@ -257,6 +266,7 @@ class UNetDenoiser(nn.Module):
             nn.Linear(time_dim * 4, time_dim),
         )
         self.time_dim = time_dim
+        self.num_levels = len(channel_mults)
 
         # ---- Input projection ----
         self.input_conv = nn.Conv2d(in_channels, base_channels, 3, padding=1)
@@ -271,11 +281,11 @@ class UNetDenoiser(nn.Module):
 
         for level, mult in enumerate(channel_mults):
             out_ch = base_channels * mult
+            cc = cond_channels[level]
             blocks = nn.ModuleList()
             attns = nn.ModuleList()
             for _ in range(num_res_blocks):
-                # +out_ch for condition features concatenated
-                blocks.append(ResBlock(ch + out_ch, out_ch, time_dim, dropout))
+                blocks.append(ResBlock(ch + cc, out_ch, time_dim, dropout))
                 ch = out_ch
                 if level in attn_resolutions:
                     attns.append(SelfAttention(ch))
@@ -304,12 +314,12 @@ class UNetDenoiser(nn.Module):
 
         for level in reversed(range(len(channel_mults))):
             out_ch = base_channels * channel_mults[level]
+            cc = cond_channels[level]
             blocks = nn.ModuleList()
             attns = nn.ModuleList()
             for i in range(num_res_blocks + 1):
                 skip_ch = encoder_channels.pop()
-                cond_ch = out_ch  # condition features
-                blocks.append(ResBlock(ch + skip_ch + cond_ch, out_ch, time_dim, dropout))
+                blocks.append(ResBlock(ch + skip_ch + cc, out_ch, time_dim, dropout))
                 ch = out_ch
                 if level in attn_resolutions:
                     attns.append(SelfAttention(ch))
@@ -337,8 +347,8 @@ class UNetDenoiser(nn.Module):
         Args:
             x: Noisy IF image (B, out_channels, H, W).
             t: Integer timestep (B,).
-            cond_features: List of BF condition features from finest to
-                coarsest, produced by ``ConditionEncoder``.
+            cond_features: List of BF condition features (one per UNet level,
+                finest to coarsest), produced by ``ConditionEncoder``.
 
         Returns:
             Predicted noise (B, out_channels, H, W).
@@ -350,14 +360,11 @@ class UNetDenoiser(nn.Module):
 
         # ---- Encoder ----
         skips: List[torch.Tensor] = [h]
-        cond_idx = 0
         for level, (blocks, attns) in enumerate(
             zip(self.encoder_blocks, self.encoder_attns)
         ):
-            cond_feat = cond_features[cond_idx]
-            cond_idx += 1
+            cond_feat = cond_features[level]
             for blk, att in zip(blocks, attns):
-                # Resize condition feature to match spatial dims
                 cf = F.interpolate(cond_feat, size=h.shape[2:], mode="bilinear", align_corners=False)
                 h = torch.cat([h, cf], dim=1)
                 h = blk(h, t_emb)
@@ -377,15 +384,11 @@ class UNetDenoiser(nn.Module):
         for level_idx, (blocks, attns) in enumerate(
             zip(self.decoder_blocks, self.decoder_attns)
         ):
-            # Determine which condition feature to use (coarsest first in decoder)
-            dec_cond_idx = len(self.encoder_blocks) - level_idx
-            if dec_cond_idx < len(cond_features):
-                cond_feat = cond_features[dec_cond_idx]
-            else:
-                cond_feat = cond_features[-1]
+            # Decoder levels go from coarsest to finest
+            level = self.num_levels - 1 - level_idx
+            cond_feat = cond_features[level]
             for blk, att in zip(blocks, attns):
                 skip = skips.pop()
-                # Match spatial sizes
                 if h.shape[2:] != skip.shape[2:]:
                     h = F.interpolate(h, size=skip.shape[2:], mode="nearest")
                 cf = F.interpolate(cond_feat, size=h.shape[2:], mode="bilinear", align_corners=False)
