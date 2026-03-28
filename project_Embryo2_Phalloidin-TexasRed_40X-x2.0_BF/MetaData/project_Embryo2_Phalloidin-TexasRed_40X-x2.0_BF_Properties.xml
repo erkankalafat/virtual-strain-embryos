@@ -1,0 +1,403 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="project_Embryo2_Phalloidin-TexasRed_40X-x2.0_BF_Properties_CIP_HWS3.xsl"?>
+<Data>
+  <Image TextDescription="">
+    <Attachment Name="PreviewMarker" Application="LAS AF" IsPreviewImage="0" />
+    <ImageDescription>
+      <Name>Embryo2_Phalloidin-TexasRed_40X-x2.0_BF</Name>
+      <Size>128.97 MB</Size>
+      <UniqueID>d36145ce-f6bf-11f0-9215-3c5282584da5</UniqueID>
+      <Channels>
+        <ChannelDescription DataType="0" ChannelTag="0" Resolution="8" NameOfMeasuredQuantity="" Min="0" Max="255" Unit="" LUTName="Blue" IsLUTInverted="0" BytesInc="0" BitInc="0" LUTPNGImage="iVBORw0KGgoAAAANSUhEUgAAAQAAAAABCAYAAAAxWXB3AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAGLSURBVDhPJcMDjBgGAADA2rbdrrZtY6tt27ZtW6tt27Zt28j3kl5ygQj4O7BBDGowgxvCkIYytGEMazjDG8GIRjKyUYxqNKMbw5jGMrZxjGs845vAhCYysUlMajKTm8J/TGkqU5vGtKYzvRnMaCYzm8WsZjO7OcxpLnObx7zmM78FLGghC1vEohazuCUsaSlLW8aylrO8FfzX/6xoJStbxapWs7o1rGkta1vHutazvg1saCMb28SmNrO5LWxpK1vbxra2s70d7GgnO9vFrnazuz3saS9728e+9rO/AxzoIAc7xKEOc7gjHOkoRzvGsY5zvBOc6CQnO8WpTnO6M5zpLGc7x7nOc74LXOgiF/u/S1zqMpe7wpWucrVrXOs617vBjW5ys1vc6ja3u8Od7nK3e9zrPvd7wIMe8rBHPOoxj3vCk57ytGc86znPe8GLXvKyV7zqNa97w5ve8rZ3vOs97/vAhz7ysU986jOf+8KXvvK1b3zrO9/7wY9+8rNf/Oo3v/vDn/7ytwEBfwDbnX2Sfkq99QAAAABJRU5ErkJggg==" STEDDetectorModeName="" STED_HuygensSaturationFactor="" STED_Wavelength="">
+        </ChannelDescription>
+        <ChannelDescription DataType="0" ChannelTag="0" Resolution="8" NameOfMeasuredQuantity="" Min="0" Max="255" Unit="" LUTName="Gray" IsLUTInverted="0" BytesInc="1048576" BitInc="0" LUTPNGImage="iVBORw0KGgoAAAANSUhEUgAAAQAAAAABCAYAAAAxWXB3AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAOrSURBVDhPFcMHNBAIAIDhE5U0kJWW0TCTokGSXVIZqezVQpOQlNGgzJZNmaWiQVFkp7SLor0zQpEm5f139733/fMf/i8gIMCgQYMQFBRESEiIwYMHM2TIEIYOHYqwsDDDhg1DRESE4cOHM2LECEaOHMmoUaMQFRVFTEwMcXFxRo8ejYSEBJKSkkhJSSEtLY2MjAxjxoxBVlaWsWPHMm7cOMaPH8+ECROYOHEicnJyyMvLo6CggKKiIpMmTWLy5MlMmTKFqVOnoqSkhLKyMioqKqiqqqKmpoa6ujrTpk1DQ0OD6dOno6mpyYwZM5g5cyZaWlpoa2sza9YsZs+ezZw5c5g7dy46Ojro6uoyb9489PT0mD9/Pvr6+ixYsAADAwMMDQ0xMjLC2NgYExMTTE1NMTMzY+HChSxatAhzc3MWL16MhYUFS5YsYenSpSxbtgxLS0usrKywtrbGxsaG5cuXY2try4oVK1i5ciWrVq3Czs4Oe3t7HBwccHR0xMnJCWdnZ1xcXHB1dcXNzQ13d3c8PDxYvXo1a9asYe3ataxbt47169fj6emJl5cX3t7ebNiwgY0bN7Jp0yY2b97Mli1b2Lp1Kz4+Pvj6+rJt2zb8/Pzw9/cnICCA7du3ExgYyI4dOwgKCmLnzp3s2rWL4OBgQkJCCA0NJSwsjN27d7Nnzx727t3Lvn37CA8PJyIigv3793PgwAEiIyOJiooiOjqamJgYYmNjiYuL4+DBgxw6dIjDhw9z5MgRjh49Snx8PAkJCSQmJpKUlERycjIpKSmkpqaSlpZGeno6x44d4/jx42RkZJCZmUlWVhbZ2dnk5OSQm5vLiRMnOHnyJHl5eZw6dYrTp09z5swZ8vPzKSgo4OzZs5w7d47z589z4cIFCgsLKSoq4uLFi1y6dIni4mJKSkq4fPkyV65cobS0lLKyMq5evUp5eTkVFRVUVlZSVVVFdXU1NTU11NbWcu3aNerq6rh+/To3btygvr6emzdvcuvWLW7fvs2dO3e4e/cu9+7d4/79+zx48ICHDx/S0NBAY2Mjjx494vHjxzQ1NdHc3MyTJ094+vQpz5494/nz57x48YKXL1/y6tUrXr9+zZs3b3j79i3v3r3j/fv3fPjwgY8fP9LS0kJrayttbW20t7fz6dMnOjo66OzspKuri8+fP/Plyxe6u7vp6enh69ev9Pb28u3bN75//86PHz/4+fMnv3794vfv3/T19dHf38+fP3/4+/cvAwMDAPwLyOJ6pYawLigAAAAASUVORK5CYII=" STEDDetectorModeName="" STED_HuygensSaturationFactor="" STED_Wavelength="">
+        </ChannelDescription>
+        <ChannelDescription DataType="0" ChannelTag="0" Resolution="8" NameOfMeasuredQuantity="" Min="0" Max="255" Unit="" LUTName="Red" IsLUTInverted="0" BytesInc="2097152" BitInc="0" LUTPNGImage="iVBORw0KGgoAAAANSUhEUgAAAQAAAAABCAYAAAAxWXB3AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAGOSURBVDhPFcMDtBAGAADAn23btq3FZdu2bS63Vcu2bdu2bdv1fte9dwEE/hnEoAYzuCEMaShDG8awhjO8EYxoJCMbxahGM7oxjGksYxvHuMYzvglMaCITm8SkJjO5KUxpKlObxrSmM70ZzGgmM5vFrGYzuznMaS5zm8e85jO/BSxoIQtbxL8sajGLW8KSlvJvS1vGspazvBWsaCUrW8WqVrO6NaxpLWtbx7rWs74NbGgjG9vEpjazuS1saStb28a2trO9HexoJzvbxa52s7s97Gkve9vHvvazvwMc6CAHO8ShDvMfhzvCkY5ytGMc6zj/9T/HO8GJ/u8kJzvFqU5zujOc6SxnO8e5znO+C1zoIhe7xKUuc7krXOkqV7vGta5zvRvc6CY3u8WtbnO7O9zpLne7x73uc78HPOghD3vEox7zuCc86SlPe8aznvO8F7zoJS97xate87o3vOktb3vHu97zvg986CMf+8SnPvO5L3zpK1/7xre+870f/OgnP/vFr37zuz/86S8DAwICfwPYsH2SEEAOtwAAAABJRU5ErkJggg==" STEDDetectorModeName="" STED_HuygensSaturationFactor="" STED_Wavelength="">
+        </ChannelDescription>
+      </Channels>
+      <Dimensions>
+        <DimensionDescription DimID="X" NumberOfElements="1024" Origin="27.33" Length="145.31" Unit="µm" BitInc="0" BytesInc="1" UnitOrigin="µm" EndPosition="117.98" UnitEndPosition="µm" LogicalUnit="pixels" Voxel="0.142">
+        </DimensionDescription>
+        <DimensionDescription DimID="Y" NumberOfElements="1024" Origin="4.41" Length="145.31" Unit="µm" BitInc="0" BytesInc="1024" UnitOrigin="µm" EndPosition="140.9" UnitEndPosition="µm" LogicalUnit="pixels" Voxel="0.142">
+        </DimensionDescription>
+        <DimensionDescription DimID="Z" NumberOfElements="41" Origin="55.74" Length="119.99" Unit="µm" BitInc="0" BytesInc="3145728" UnitOrigin="µm" EndPosition="-64.25" UnitEndPosition="µm" LogicalUnit="planes" Voxel="3">
+        </DimensionDescription>
+      </Dimensions>
+      <FileLocation>
+      </FileLocation>
+      <StartTime>1/21/2026 2:53:51 PM.779</StartTime>
+      <EndTime>1/21/2026 2:57:17 PM.676</EndTime>
+      <FrameCount>123 (3 channels, 41 frames)</FrameCount>
+      <NumberOfChannels>3</NumberOfChannels>
+    </ImageDescription>
+    <TimeStampList NumberOfTimeStamps="123" FirstTimeStampDate="1/21/2026" FirstTimeStampTime="2:53:51 PM" FirstTimeStampMiliSeconds="779">1dc8acc9c7ecf30 1dc8acc9c7ecf30 1dc8acc9c7ecf30 1dc8acc9f9054f0 1dc8acc9f9054f0 1dc8acc9f9054f0 1dc8acca2a1b3a0 1dc8acca2a1b3a0 1dc8acca2a1b3a0 1dc8acca5b31250 1dc8acca5b31250 1dc8acca5b31250 1dc8acca8c49810 1dc8acca8c49810 1dc8acca8c49810 1dc8accabd5f6c0 1dc8accabd5f6c0 1dc8accabd5f6c0 1dc8accaee77c80 1dc8accaee77c80 1dc8accaee77c80 1dc8accb1f8db30 1dc8accb1f8db30 1dc8accb1f8db30 1dc8accb50a60f0 1dc8accb50a60f0 1dc8accb50a60f0 1dc8accb81bbfa0 1dc8accb81bbfa0 1dc8accb81bbfa0 1dc8accbb2d1e50 1dc8accbb2d1e50 1dc8accbb2d1e50 1dc8accbe3ea410 1dc8accbe3ea410 1dc8accbe3ea410 1dc8accc15002c0 1dc8accc15002c0 1dc8accc15002c0 1dc8accc4618880 1dc8accc4618880 1dc8accc4618880 1dc8accc772e730 1dc8accc772e730 1dc8accc772e730 1dc8accca846cf0 1dc8accca846cf0 1dc8accca846cf0 1dc8acccd95cba0 1dc8acccd95cba0 1dc8acccd95cba0 1dc8accd0a72a50 1dc8accd0a72a50 1dc8accd0a72a50 1dc8accd3b8b010 1dc8accd3b8b010 1dc8accd3b8b010 1dc8accd6ca0ec0 1dc8accd6ca0ec0 1dc8accd6ca0ec0 1dc8accd9db9480 1dc8accd9db9480 1dc8accd9db9480 1dc8accdcecf330 1dc8accdcecf330 1dc8accdcecf330 1dc8accdffe51e0 1dc8accdffe51e0 1dc8accdffe51e0 1dc8acce30fd7a0 1dc8acce30fd7a0 1dc8acce30fd7a0 1dc8acce6213650 1dc8acce6213650 1dc8acce6213650 1dc8acce932bc10 1dc8acce932bc10 1dc8acce932bc10 1dc8accec441ac0 1dc8accec441ac0 1dc8accec441ac0 1dc8accef55a080 1dc8accef55a080 1dc8accef55a080 1dc8accf266ff30 1dc8accf266ff30 1dc8accf266ff30 1dc8accf5785de0 1dc8accf5785de0 1dc8accf5785de0 1dc8accf889e3a0 1dc8accf889e3a0 1dc8accf889e3a0 1dc8accfb9b4250 1dc8accfb9b4250 1dc8accfb9b4250 1dc8accfeacc810 1dc8accfeacc810 1dc8accfeacc810 1dc8acd01be26c0 1dc8acd01be26c0 1dc8acd01be26c0 1dc8acd04cf8570 1dc8acd04cf8570 1dc8acd04cf8570 1dc8acd07e10b30 1dc8acd07e10b30 1dc8acd07e10b30 1dc8acd0af269e0 1dc8acd0af269e0 1dc8acd0af269e0 1dc8acd0e03efa0 1dc8acd0e03efa0 1dc8acd0e03efa0 1dc8acd11154e50 1dc8acd11154e50 1dc8acd11154e50 1dc8acd1426d410 1dc8acd1426d410 1dc8acd1426d410 1dc8acd173832c0 1dc8acd173832c0 1dc8acd173832c0 <TimeStamp RelativeTime="0.000" Date="1/21/2026" Time="2:53:51 PM" MiliSeconds="779" /><TimeStamp RelativeTime="0.000" Date="1/21/2026" Time="2:53:51 PM" MiliSeconds="779" /><TimeStamp RelativeTime="0.000" Date="1/21/2026" Time="2:53:51 PM" MiliSeconds="779" /><TimeStamp RelativeTime="5.148" Date="1/21/2026" Time="2:53:56 PM" MiliSeconds="927" /><TimeStamp RelativeTime="5.148" Date="1/21/2026" Time="2:53:56 PM" MiliSeconds="927" /><TimeStamp RelativeTime="5.148" Date="1/21/2026" Time="2:53:56 PM" MiliSeconds="927" /><TimeStamp RelativeTime="10.295" Date="1/21/2026" Time="2:54:02 PM" MiliSeconds="074" /><TimeStamp RelativeTime="10.295" Date="1/21/2026" Time="2:54:02 PM" MiliSeconds="074" /><TimeStamp RelativeTime="10.295" Date="1/21/2026" Time="2:54:02 PM" MiliSeconds="074" /><TimeStamp RelativeTime="15.442" Date="1/21/2026" Time="2:54:07 PM" MiliSeconds="221" /><TimeStamp RelativeTime="15.442" Date="1/21/2026" Time="2:54:07 PM" MiliSeconds="221" /><TimeStamp RelativeTime="15.442" Date="1/21/2026" Time="2:54:07 PM" MiliSeconds="221" /><TimeStamp RelativeTime="20.590" Date="1/21/2026" Time="2:54:12 PM" MiliSeconds="369" /><TimeStamp RelativeTime="20.590" Date="1/21/2026" Time="2:54:12 PM" MiliSeconds="369" /><TimeStamp RelativeTime="20.590" Date="1/21/2026" Time="2:54:12 PM" MiliSeconds="369" /><TimeStamp RelativeTime="25.737" Date="1/21/2026" Time="2:54:17 PM" MiliSeconds="516" /><TimeStamp RelativeTime="25.737" Date="1/21/2026" Time="2:54:17 PM" MiliSeconds="516" /><TimeStamp RelativeTime="25.737" Date="1/21/2026" Time="2:54:17 PM" MiliSeconds="516" /><TimeStamp RelativeTime="30.885" Date="1/21/2026" Time="2:54:22 PM" MiliSeconds="664" /><TimeStamp RelativeTime="30.885" Date="1/21/2026" Time="2:54:22 PM" MiliSeconds="664" /><TimeStamp RelativeTime="30.885" Date="1/21/2026" Time="2:54:22 PM" MiliSeconds="664" /><TimeStamp RelativeTime="36.032" Date="1/21/2026" Time="2:54:27 PM" MiliSeconds="811" /><TimeStamp RelativeTime="36.032" Date="1/21/2026" Time="2:54:27 PM" MiliSeconds="811" /><TimeStamp RelativeTime="36.032" Date="1/21/2026" Time="2:54:27 PM" MiliSeconds="811" /><TimeStamp RelativeTime="41.180" Date="1/21/2026" Time="2:54:32 PM" MiliSeconds="959" /><TimeStamp RelativeTime="41.180" Date="1/21/2026" Time="2:54:32 PM" MiliSeconds="959" /><TimeStamp RelativeTime="41.180" Date="1/21/2026" Time="2:54:32 PM" MiliSeconds="959" /><TimeStamp RelativeTime="46.327" Date="1/21/2026" Time="2:54:38 PM" MiliSeconds="106" /><TimeStamp RelativeTime="46.327" Date="1/21/2026" Time="2:54:38 PM" MiliSeconds="106" /><TimeStamp RelativeTime="46.327" Date="1/21/2026" Time="2:54:38 PM" MiliSeconds="106" /><TimeStamp RelativeTime="51.474" Date="1/21/2026" Time="2:54:43 PM" MiliSeconds="253" /><TimeStamp RelativeTime="51.474" Date="1/21/2026" Time="2:54:43 PM" MiliSeconds="253" /><TimeStamp RelativeTime="51.474" Date="1/21/2026" Time="2:54:43 PM" MiliSeconds="253" /><TimeStamp RelativeTime="56.622" Date="1/21/2026" Time="2:54:48 PM" MiliSeconds="401" /><TimeStamp RelativeTime="56.622" Date="1/21/2026" Time="2:54:48 PM" MiliSeconds="401" /><TimeStamp RelativeTime="56.622" Date="1/21/2026" Time="2:54:48 PM" MiliSeconds="401" /><TimeStamp RelativeTime="61.769" Date="1/21/2026" Time="2:54:53 PM" MiliSeconds="548" /><TimeStamp RelativeTime="61.769" Date="1/21/2026" Time="2:54:53 PM" MiliSeconds="548" /><TimeStamp RelativeTime="61.769" Date="1/21/2026" Time="2:54:53 PM" MiliSeconds="548" /><TimeStamp RelativeTime="66.917" Date="1/21/2026" Time="2:54:58 PM" MiliSeconds="696" /><TimeStamp RelativeTime="66.917" Date="1/21/2026" Time="2:54:58 PM" MiliSeconds="696" /><TimeStamp RelativeTime="66.917" Date="1/21/2026" Time="2:54:58 PM" MiliSeconds="696" /><TimeStamp RelativeTime="72.064" Date="1/21/2026" Time="2:55:03 PM" MiliSeconds="843" /><TimeStamp RelativeTime="72.064" Date="1/21/2026" Time="2:55:03 PM" MiliSeconds="843" /><TimeStamp RelativeTime="72.064" Date="1/21/2026" Time="2:55:03 PM" MiliSeconds="843" /><TimeStamp RelativeTime="77.212" Date="1/21/2026" Time="2:55:08 PM" MiliSeconds="991" /><TimeStamp RelativeTime="77.212" Date="1/21/2026" Time="2:55:08 PM" MiliSeconds="991" /><TimeStamp RelativeTime="77.212" Date="1/21/2026" Time="2:55:08 PM" MiliSeconds="991" /><TimeStamp RelativeTime="82.359" Date="1/21/2026" Time="2:55:14 PM" MiliSeconds="138" /><TimeStamp RelativeTime="82.359" Date="1/21/2026" Time="2:55:14 PM" MiliSeconds="138" /><TimeStamp RelativeTime="82.359" Date="1/21/2026" Time="2:55:14 PM" MiliSeconds="138" /><TimeStamp RelativeTime="87.506" Date="1/21/2026" Time="2:55:19 PM" MiliSeconds="285" /><TimeStamp RelativeTime="87.506" Date="1/21/2026" Time="2:55:19 PM" MiliSeconds="285" /><TimeStamp RelativeTime="87.506" Date="1/21/2026" Time="2:55:19 PM" MiliSeconds="285" /><TimeStamp RelativeTime="92.654" Date="1/21/2026" Time="2:55:24 PM" MiliSeconds="433" /><TimeStamp RelativeTime="92.654" Date="1/21/2026" Time="2:55:24 PM" MiliSeconds="433" /><TimeStamp RelativeTime="92.654" Date="1/21/2026" Time="2:55:24 PM" MiliSeconds="433" /><TimeStamp RelativeTime="97.801" Date="1/21/2026" Time="2:55:29 PM" MiliSeconds="580" /><TimeStamp RelativeTime="97.801" Date="1/21/2026" Time="2:55:29 PM" MiliSeconds="580" /><TimeStamp RelativeTime="97.801" Date="1/21/2026" Time="2:55:29 PM" MiliSeconds="580" /><TimeStamp RelativeTime="102.949" Date="1/21/2026" Time="2:55:34 PM" MiliSeconds="728" /><TimeStamp RelativeTime="102.949" Date="1/21/2026" Time="2:55:34 PM" MiliSeconds="728" /><TimeStamp RelativeTime="102.949" Date="1/21/2026" Time="2:55:34 PM" MiliSeconds="728" /><TimeStamp RelativeTime="108.096" Date="1/21/2026" Time="2:55:39 PM" MiliSeconds="875" /><TimeStamp RelativeTime="108.096" Date="1/21/2026" Time="2:55:39 PM" MiliSeconds="875" /><TimeStamp RelativeTime="108.096" Date="1/21/2026" Time="2:55:39 PM" MiliSeconds="875" /><TimeStamp RelativeTime="113.243" Date="1/21/2026" Time="2:55:45 PM" MiliSeconds="022" /><TimeStamp RelativeTime="113.243" Date="1/21/2026" Time="2:55:45 PM" MiliSeconds="022" /><TimeStamp RelativeTime="113.243" Date="1/21/2026" Time="2:55:45 PM" MiliSeconds="022" /><TimeStamp RelativeTime="118.391" Date="1/21/2026" Time="2:55:50 PM" MiliSeconds="170" /><TimeStamp RelativeTime="118.391" Date="1/21/2026" Time="2:55:50 PM" MiliSeconds="170" /><TimeStamp RelativeTime="118.391" Date="1/21/2026" Time="2:55:50 PM" MiliSeconds="170" /><TimeStamp RelativeTime="123.538" Date="1/21/2026" Time="2:55:55 PM" MiliSeconds="317" /><TimeStamp RelativeTime="123.538" Date="1/21/2026" Time="2:55:55 PM" MiliSeconds="317" /><TimeStamp RelativeTime="123.538" Date="1/21/2026" Time="2:55:55 PM" MiliSeconds="317" /><TimeStamp RelativeTime="128.686" Date="1/21/2026" Time="2:56:00 PM" MiliSeconds="465" /><TimeStamp RelativeTime="128.686" Date="1/21/2026" Time="2:56:00 PM" MiliSeconds="465" /><TimeStamp RelativeTime="128.686" Date="1/21/2026" Time="2:56:00 PM" MiliSeconds="465" /><TimeStamp RelativeTime="133.833" Date="1/21/2026" Time="2:56:05 PM" MiliSeconds="612" /><TimeStamp RelativeTime="133.833" Date="1/21/2026" Time="2:56:05 PM" MiliSeconds="612" /><TimeStamp RelativeTime="133.833" Date="1/21/2026" Time="2:56:05 PM" MiliSeconds="612" /><TimeStamp RelativeTime="138.981" Date="1/21/2026" Time="2:56:10 PM" MiliSeconds="760" /><TimeStamp RelativeTime="138.981" Date="1/21/2026" Time="2:56:10 PM" MiliSeconds="760" /><TimeStamp RelativeTime="138.981" Date="1/21/2026" Time="2:56:10 PM" MiliSeconds="760" /><TimeStamp RelativeTime="144.128" Date="1/21/2026" Time="2:56:15 PM" MiliSeconds="907" /><TimeStamp RelativeTime="144.128" Date="1/21/2026" Time="2:56:15 PM" MiliSeconds="907" /><TimeStamp RelativeTime="144.128" Date="1/21/2026" Time="2:56:15 PM" MiliSeconds="907" /><TimeStamp RelativeTime="149.275" Date="1/21/2026" Time="2:56:21 PM" MiliSeconds="054" /><TimeStamp RelativeTime="149.275" Date="1/21/2026" Time="2:56:21 PM" MiliSeconds="054" /><TimeStamp RelativeTime="149.275" Date="1/21/2026" Time="2:56:21 PM" MiliSeconds="054" /><TimeStamp RelativeTime="154.423" Date="1/21/2026" Time="2:56:26 PM" MiliSeconds="202" /><TimeStamp RelativeTime="154.423" Date="1/21/2026" Time="2:56:26 PM" MiliSeconds="202" /><TimeStamp RelativeTime="154.423" Date="1/21/2026" Time="2:56:26 PM" MiliSeconds="202" /><TimeStamp RelativeTime="159.570" Date="1/21/2026" Time="2:56:31 PM" MiliSeconds="349" /><TimeStamp RelativeTime="159.570" Date="1/21/2026" Time="2:56:31 PM" MiliSeconds="349" /><TimeStamp RelativeTime="159.570" Date="1/21/2026" Time="2:56:31 PM" MiliSeconds="349" /><TimeStamp RelativeTime="164.718" Date="1/21/2026" Time="2:56:36 PM" MiliSeconds="497" /><TimeStamp RelativeTime="164.718" Date="1/21/2026" Time="2:56:36 PM" MiliSeconds="497" /><TimeStamp RelativeTime="164.718" Date="1/21/2026" Time="2:56:36 PM" MiliSeconds="497" /><TimeStamp RelativeTime="169.865" Date="1/21/2026" Time="2:56:41 PM" MiliSeconds="644" /><TimeStamp RelativeTime="169.865" Date="1/21/2026" Time="2:56:41 PM" MiliSeconds="644" /><TimeStamp RelativeTime="169.865" Date="1/21/2026" Time="2:56:41 PM" MiliSeconds="644" /><TimeStamp RelativeTime="175.012" Date="1/21/2026" Time="2:56:46 PM" MiliSeconds="791" /><TimeStamp RelativeTime="175.012" Date="1/21/2026" Time="2:56:46 PM" MiliSeconds="791" /><TimeStamp RelativeTime="175.012" Date="1/21/2026" Time="2:56:46 PM" MiliSeconds="791" /><TimeStamp RelativeTime="180.160" Date="1/21/2026" Time="2:56:51 PM" MiliSeconds="939" /><TimeStamp RelativeTime="180.160" Date="1/21/2026" Time="2:56:51 PM" MiliSeconds="939" /><TimeStamp RelativeTime="180.160" Date="1/21/2026" Time="2:56:51 PM" MiliSeconds="939" /><TimeStamp RelativeTime="185.307" Date="1/21/2026" Time="2:56:57 PM" MiliSeconds="086" /><TimeStamp RelativeTime="185.307" Date="1/21/2026" Time="2:56:57 PM" MiliSeconds="086" /><TimeStamp RelativeTime="185.307" Date="1/21/2026" Time="2:56:57 PM" MiliSeconds="086" /><TimeStamp RelativeTime="190.455" Date="1/21/2026" Time="2:57:02 PM" MiliSeconds="234" /><TimeStamp RelativeTime="190.455" Date="1/21/2026" Time="2:57:02 PM" MiliSeconds="234" /><TimeStamp RelativeTime="190.455" Date="1/21/2026" Time="2:57:02 PM" MiliSeconds="234" /><TimeStamp RelativeTime="195.602" Date="1/21/2026" Time="2:57:07 PM" MiliSeconds="381" /><TimeStamp RelativeTime="195.602" Date="1/21/2026" Time="2:57:07 PM" MiliSeconds="381" /><TimeStamp RelativeTime="195.602" Date="1/21/2026" Time="2:57:07 PM" MiliSeconds="381" /><TimeStamp RelativeTime="200.750" Date="1/21/2026" Time="2:57:12 PM" MiliSeconds="529" /><TimeStamp RelativeTime="200.750" Date="1/21/2026" Time="2:57:12 PM" MiliSeconds="529" /><TimeStamp RelativeTime="200.750" Date="1/21/2026" Time="2:57:12 PM" MiliSeconds="529" /><TimeStamp RelativeTime="205.897" Date="1/21/2026" Time="2:57:17 PM" MiliSeconds="676" /><TimeStamp RelativeTime="205.897" Date="1/21/2026" Time="2:57:17 PM" MiliSeconds="676" /><TimeStamp RelativeTime="205.897" Date="1/21/2026" Time="2:57:17 PM" MiliSeconds="676" /></TimeStampList>
+    <Attachment Name="ChannelAttachment" Application="LAS AF" />
+    <Attachment Name="ViewerScaling" Application="LAS AF">
+      <ChannelScalingInfo BackgroundLutName="" WhiteValue="1" BlackValue="0" GammaValue="1" Automatic="0" />
+      <ChannelScalingInfo BackgroundLutName="" WhiteValue="1" BlackValue="0" GammaValue="1" Automatic="0" />
+      <ChannelScalingInfo BackgroundLutName="" WhiteValue="1" BlackValue="0" GammaValue="1" Automatic="0" />
+    </Attachment>
+    <Attachment Name="ImageXMLDocument" Application="LAS AF">
+      <RootNode />
+    </Attachment>
+    <Attachment Name="HardwareSetting" Application="LAS AF" Software="LAS X 3.1.5.16308" HardwareServerVersion="Build 16308" SystemType="12" SystemTypeName="TCS SP8" DataSourceType="0" DataSourceTypeName="Confocal">
+      <ATLConfocalSettingDefinition VersionNumber="13" UserSettingName="S99" CanDoSTED="0" IsSTEDActive="0" IsSwitchForPulsedStedWithMpActive="0" UseSystemOptimizedVoxelCalculation="1" IsUserSettingNameSet="0" IsHydPulsedModeCoeffntManualActive="0" XGalvoMovementMode="0" XGalvoMovementModeName="sinus" BitSize="8" MaxIntegrationTime="0" ScanMode="xyz" ZUseMode="1" ZUseModeName="z-galvo" ZPosition="-64.25 µm" IsSuperZ="0" ValidBeginStack="1" ValidEndStack="1" Begin="5.57416016975419E-05" End="-6.42498152254249E-05" Sections="41" StackCalculationMode="1" StackCalculationModeName="Constant step size" IsMPFormulaForStepSizerUsageActive="0" IsFastZStack="0" ZStackDirectionMode="1" ZStackDirectionModeName="Unidirectional" StagePosX="68900.37 µm" StagePosY="47391.48 µm" StageRangeX="126999.93 µm" StageRangeY="82999.96 µm" FlipX="1" FlipY="1" SwapXY="1" Magnification="40" ObjectivePos="2" ObjectiveName="HC PL APO CS2    40x/1.30 OIL " ObjectiveNumber="11506358" MicroscopeModel="DMI8-CS" IsInverseMicroscopeModel="1" Immersion="OIL" NumericalAperture="1.3" RefractionIndex="1.518" IsFCSFilterAutomationActive="0" IsSMDChaserUVAOTFAutomationActive="0" CanDoCSMode="1" ActiveCS_SubModeForTLD="0" ActiveCS_SubModeForTLDName="Scan-BF" ActiveCS_SubModeForRLD="0" ActiveCS_SubModeForRLDName="Empty" RldFluoCubePos="6" RldCubeAutoSelectionEnabled="0" LastNonMP_MFP_FW_Name="" LastNonMP_Pol_FW_Name="" ScanSpeed="400 Hz" InDimension="1024" OutDimension="1024" UseScanFormatRestriction="0" Zoom="2" BaseZoom="0.75" PanFirstDim="-1093.25 µm" PanSecondDim="-1.76551685497735E-04" ScanDirectionX="1" ScanDirectionXName="Unidirectional" Pinhole="65.3 µm" PinholeAiry="1 AU" EmissionWavelengthForPinholeAiryCalculation="580 nm" FrameAverage="1" LineAverage="1" FrameAccumulation="1" Line_Accumulation="1" AreBleachPointsEnabled="0" InTrigger="-1" OutTrigger="-1" IsRoiScanEnable="0" Is3DLimitedRoiScanEnable="0" ZCompensationModes="0" WizardMode="0" IsConstantIntegrationTimeActive="1" PixelDwellTime="0.0000006" SystemSerialNumber="8110002048">
+        <EasySRMappingArray />
+        <EasySRSlider SRRelative="75" ThreeDRelative="0" GentleRelative="25" />
+        <Quantity Value="2.99978542307417E-06" Unit="m" />
+        <AdditionalZPositionList>
+          <AdditionalZPosition Valid="1" SuperZMode="1" SuperZModeName="RestrictedRange" ZMode="1" ZUseModeName="z-galvo" ZPosition="-6.4249815225425E-05" />
+          <AdditionalZPosition Valid="1" SuperZMode="1" SuperZModeName="RestrictedRange" ZMode="2" ZUseModeName="z-wide" ZPosition="0.00534665663" />
+        </AdditionalZPositionList>
+        <ShutterList>
+          <Shutter Version="0" LightSourceType="1" LightSourceName="UV" IsActive="1">
+            <BeamRoute Version="0">
+              <BeamPosition BeamPositionLevel="0" BeamPosition="30" />
+            </BeamRoute>
+          </Shutter>
+          <Shutter Version="0" LightSourceType="0" LightSourceName="Visible" IsActive="1">
+            <BeamRoute Version="0">
+              <BeamPosition BeamPositionLevel="0" BeamPosition="10" />
+            </BeamRoute>
+          </Shutter>
+        </ShutterList>
+        <BleachPoints>
+          <LMSDataContainerHeader Version="2">
+            <Element Name="BleachPointROISet" Visibility="2" CopyOption="1" UniqueID="54ff39f1-f6c0-11f0-9215-3c5282584da5">
+              <Data>
+                <ROISet ROISetType="1" PossibleChildROITypes="-1" PossibleROITransforms="65535" PossibleROIActions="65535" />
+              </Data>
+              <Memory Size="0" MemoryBlockID="MemBlock_586" />
+              <Children />
+            </Element>
+          </LMSDataContainerHeader>
+        </BleachPoints>
+        <ATLConfocalBleachPointsSettings />
+        <FilterWheel FluorifierAutoSelection="0" BeamSplitterAutoSelection="1" StedBeamSelectionPinholeCoupling="0" MultiFunctionPortAutoSelection="0" BeamMergerAutoSelectionEnabled="1">
+          <Wheel Version="0" Qualifier="40" FilterWheelName="Excitation Beam Splitter" FilterIndex="4" FilterName="DD 488/594" IsSpectrumTurnMode="0" FilterSpectrumPos="0" IndexChanged="0" SpectrumChanged="0" FilterDisplayValue="DD 488/594" FilterType="Excitation Beam Splitter">
+            <BeamRoute Version="0" />
+          </Wheel>
+          <Wheel Version="0" Qualifier="160" FilterWheelName="Galvo Slider" FilterIndex="0" FilterName="Galvo X Normal " IsSpectrumTurnMode="0" FilterSpectrumPos="0" IndexChanged="0" SpectrumChanged="0" FilterDisplayValue="Galvo X Normal " FilterType="Galvo Slider">
+            <BeamRoute Version="0" />
+          </Wheel>
+          <Wheel Version="0" Qualifier="200" FilterWheelName="Galvo Resonant Pan" FilterIndex="0" FilterName="Galvo X Pan Center " IsSpectrumTurnMode="0" FilterSpectrumPos="0" IndexChanged="0" SpectrumChanged="0" FilterDisplayValue="Galvo X Pan Center " FilterType="Galvo Resonant Pan">
+            <BeamRoute Version="0" />
+          </Wheel>
+          <Wheel Version="0" Qualifier="170" FilterWheelName="Target Slider" FilterIndex="0" FilterName="Target Park " IsSpectrumTurnMode="0" FilterSpectrumPos="0" IndexChanged="0" SpectrumChanged="0" FilterDisplayValue="Target Park " FilterType="Target Slider">
+            <BeamRoute Version="0" />
+          </Wheel>
+          <Wheel Version="0" Qualifier="31" FilterWheelName="X2 Lens Changer" FilterIndex="0" FilterName="CS2 UV Optics 1 " IsSpectrumTurnMode="0" FilterSpectrumPos="0" IndexChanged="0" SpectrumChanged="0" FilterDisplayValue="CS2 UV Optics 1 " FilterType="Unknown Filter">
+            <BeamRoute Version="0" />
+          </Wheel>
+        </FilterWheel>
+        <Spectro>
+          <MultiBand Channel="1" ChannelName="Channel 1" LeftWorld="418" RightWorld="470.029151943463" TargetWaveLengthBegin="418" TargetWaveLengthEnd="470.029151943463" DyeName="" />
+          <MultiBand Channel="2" ChannelName="Channel 2" LeftWorld="511.25" RightWorld="563.75" TargetWaveLengthBegin="511.25" TargetWaveLengthEnd="563.75" DyeName="" />
+          <MultiBand Channel="3" ChannelName="Channel 3" LeftWorld="605.861307420496" RightWorld="658.361307420496" TargetWaveLengthBegin="605.861307420496" TargetWaveLengthEnd="658.361307420496" DyeName="" />
+          <MultiBand Channel="4" ChannelName="Channel 4" LeftWorld="721.25" RightWorld="773.75" TargetWaveLengthBegin="721.25" TargetWaveLengthEnd="773.75" DyeName="" />
+        </Spectro>
+        <AotfList>
+          <Aotf Version="0" LightSourceName="UV" LightSourceType="1" OpenVirtual="0" IsChanged="0" CanDoPulseFreq="0" PulsFreq="0" CanDoTwoLaserPIE="0" TwoLaserPIEPossibleLastState="0" TwoLaserPIEActive="0" AotfType="UV">
+            <BeamRoute Version="0">
+              <BeamPosition BeamPositionLevel="0" BeamPosition="30" />
+            </BeamRoute>
+            <LaserLineSetting LaserLine="405" IntensityDev="2.00455020598905" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="0" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Shutter: on, Intensity: 2.0046%" />
+          </Aotf>
+          <Aotf Version="0" LightSourceName="Visible" LightSourceType="0" OpenVirtual="0" IsChanged="0" CanDoPulseFreq="0" PulsFreq="0" CanDoTwoLaserPIE="0" TwoLaserPIEPossibleLastState="0" TwoLaserPIEActive="0" AotfType="Visible">
+            <BeamRoute Version="0">
+              <BeamPosition BeamPositionLevel="0" BeamPosition="10" />
+            </BeamRoute>
+            <LaserLineSetting LaserLine="458" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="0" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Shutter: on, Intensity: 0.0000%" />
+            <LaserLineSetting LaserLine="488" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="1" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Shutter: on, Intensity: 0.0000%" />
+            <LaserLineSetting LaserLine="514" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="2" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Shutter: on, Intensity: 0.0000%" />
+            <LaserLineSetting LaserLine="561" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="3" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Shutter: on, Intensity: 0.0000%" />
+            <LaserLineSetting LaserLine="594" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="4" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Shutter: on, Intensity: 0.0000%" />
+            <LaserLineSetting LaserLine="633" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="5" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Shutter: on, Intensity: 0.0000%" />
+          </Aotf>
+        </AotfList>
+        <LUT_List>
+          <LUT Channel="1" LutName="Blue" />
+          <LUT Channel="2" LutName="Green" />
+          <LUT Channel="3" LutName="Red" />
+          <LUT Channel="4" LutName="Blue" />
+          <LUT Channel="100" LutName="Gray" />
+          <LUT Channel="2000" LutName="Gray" />
+          <LUT Channel="2001" LutName="Green" />
+          <LUT Channel="2002" LutName="Red" />
+          <LUT Channel="2003" LutName="Blue" />
+          <LUT Channel="2004" LutName="Cyan" />
+          <LUT Channel="2005" LutName="Magenta" />
+          <LUT Channel="2006" LutName="Yellow" />
+          <LUT Channel="2007" LutName="Glow" />
+          <LUT Channel="3000" LutName="Gray" />
+        </LUT_List>
+        <DetectorList DetectorAutoSelection="1" InExternalDetectionMode="0">
+          <Detector Name="HyD 1" Type="HyD" ScanType="Internal" Channel="1" ChannelName="Channel 1" IsActive="1" Gain="100" Offset="-0.01" IsSTEDDetector="1" IsSRSDetector="0" DetectionRangeBegin="0" DetectionRangeEnd="0" Phase="0" IsFlimDetector="0" IsHPDDetector="1" IsEnabled="1" IsHPDOverloaded="0" CanDoPhotonCounting="1" AcquisitionMode="0" AcquisitionModeName="PhotonIntegration" CanDoTimeGate="0" OffsetShow="0" GainShow="100" ActiveShow="Active" Band="(418nm - 470nm)" LutName="Blue" />
+          <Detector Name="PMT 2" Type="PMT" ScanType="Internal" Channel="2" ChannelName="Channel 2" IsActive="0" Gain="0" Offset="0" IsSTEDDetector="1" IsSRSDetector="0" DetectionRangeBegin="0" DetectionRangeEnd="0" Phase="0" IsFlimDetector="0" IsHPDDetector="0" CanDoTimeGate="0" OffsetShow="0" GainShow="0" ActiveShow="Inactive" Band="(511nm - 564nm)" LutName="Green" />
+          <Detector Name="HyD 3" Type="HyD" ScanType="Internal" Channel="3" ChannelName="Channel 3" IsActive="0" Gain="100" Offset="-0.01" IsSTEDDetector="1" IsSRSDetector="0" DetectionRangeBegin="0" DetectionRangeEnd="0" Phase="0" IsFlimDetector="0" IsHPDDetector="1" IsEnabled="1" IsHPDOverloaded="0" CanDoPhotonCounting="1" AcquisitionMode="0" AcquisitionModeName="PhotonIntegration" CanDoTimeGate="0" OffsetShow="0" GainShow="100" ActiveShow="Inactive" Band="(606nm - 658nm)" LutName="Red" />
+          <Detector Name="PMT 4" Type="PMT" ScanType="Internal" Channel="4" ChannelName="Channel 4" IsActive="0" Gain="0" Offset="0" IsSTEDDetector="1" IsSRSDetector="0" DetectionRangeBegin="0" DetectionRangeEnd="0" Phase="0" IsFlimDetector="0" IsHPDDetector="0" CanDoTimeGate="0" OffsetShow="0" GainShow="0" ActiveShow="Inactive" Band="(721nm - 774nm)" LutName="Blue" />
+          <Detector Name="PMT Trans" Type="PMT" ScanType="TLD" Channel="100" ChannelName="Transmission Channel" IsActive="1" Gain="300" Offset="0" IsSTEDDetector="0" IsSRSDetector="0" DetectionRangeBegin="0" DetectionRangeEnd="0" Phase="0" IsFlimDetector="0" IsHPDDetector="0" CanDoTimeGate="0" OffsetShow="0" GainShow="300" ActiveShow="Active" Band="" LutName="Gray" />
+        </DetectorList>
+        <LaserArray>
+          <Laser Version="6" LightSourceType="1" LaserName="Diode 405" PowerState="On" StedAlignFlag="0" CanDoLinearOutputPower="0" CanDoPulsing="0" CanDoOutputPowerWatt="1" HighPowerModeActive="0" LightSourceName="UV" OutputPowerWatt="0" Wavelength="405" CanDoChangeWavelength="0" OutputPowerDisplay="On">
+            <BeamRoute Version="0">
+              <BeamPosition BeamPositionLevel="0" BeamPosition="30" />
+            </BeamRoute>
+          </Laser>
+          <Laser Version="6" LightSourceType="0" LaserName="Argon" PowerState="Off" StedAlignFlag="0" CanDoLinearOutputPower="1" CanDoPulsing="0" CanDoOutputPowerWatt="1" HighPowerModeActive="0" LightSourceName="Visible" OutputPowerWatt="-11.1111111111111" OutputPowerPercentage="0" Wavelength="458" CanDoChangeWavelength="0" OutputPowerDisplay="Off">
+            <BeamRoute Version="0">
+              <BeamPosition BeamPositionLevel="0" BeamPosition="10" />
+            </BeamRoute>
+          </Laser>
+          <Laser Version="6" LightSourceType="0" LaserName="DPSS 561" PowerState="Off" StedAlignFlag="0" CanDoLinearOutputPower="0" CanDoPulsing="0" CanDoOutputPowerWatt="1" HighPowerModeActive="0" LightSourceName="Visible" OutputPowerWatt="0" Wavelength="561" CanDoChangeWavelength="0" OutputPowerDisplay="Off">
+            <BeamRoute Version="0">
+              <BeamPosition BeamPositionLevel="0" BeamPosition="10" />
+            </BeamRoute>
+          </Laser>
+          <Laser Version="6" LightSourceType="0" LaserName="HeNe 594" PowerState="On" StedAlignFlag="0" CanDoLinearOutputPower="0" CanDoPulsing="0" CanDoOutputPowerWatt="1" HighPowerModeActive="0" LightSourceName="Visible" OutputPowerWatt="0" Wavelength="594" CanDoChangeWavelength="0" OutputPowerDisplay="On">
+            <BeamRoute Version="0">
+              <BeamPosition BeamPositionLevel="0" BeamPosition="10" />
+            </BeamRoute>
+          </Laser>
+          <Laser Version="6" LightSourceType="0" LaserName="HeNe 633" PowerState="Off" StedAlignFlag="0" CanDoLinearOutputPower="0" CanDoPulsing="0" CanDoOutputPowerWatt="1" HighPowerModeActive="0" LightSourceName="Visible" OutputPowerWatt="0" Wavelength="633" CanDoChangeWavelength="0" OutputPowerDisplay="Off">
+            <BeamRoute Version="0">
+              <BeamPosition BeamPositionLevel="0" BeamPosition="10" />
+            </BeamRoute>
+          </Laser>
+        </LaserArray>
+        <OnlineDyeSeparation Enabled="0" KeepRawImage="0" Detectors="0" Channels="0" Normalize="0">
+          <OnlineDyeSeparationDetectorList />
+          <OnlineDyeSeparationChannelList />
+        </OnlineDyeSeparation>
+        <VariableBeamExpanderFactors />
+      </ATLConfocalSettingDefinition>
+      <LDM_Block_Sequential SequentialMode="0" AutoFocusSequence="1" BlockName="Job(Seq.Scan) 1">
+        <LDM_Block_Sequential_Master>
+          <ATLConfocalSettingDefinition VersionNumber="13" UserSettingName="S4" CanDoSTED="0" IsSTEDActive="0" IsSwitchForPulsedStedWithMpActive="0" UseSystemOptimizedVoxelCalculation="1" IsUserSettingNameSet="0" IsHydPulsedModeCoeffntManualActive="0" XGalvoMovementMode="0" XGalvoMovementModeName="sinus" BitSize="8" MaxIntegrationTime="0" ScanMode="xyz" ZUseMode="1" ZUseModeName="z-galvo" ZPosition="-15.94 µm" IsSuperZ="0" ValidBeginStack="1" ValidEndStack="1" Begin="5.57416016975419E-05" End="-6.42498152254249E-05" Sections="41" StackCalculationMode="1" StackCalculationModeName="Constant step size" IsMPFormulaForStepSizerUsageActive="0" IsFastZStack="0" ZStackDirectionMode="1" ZStackDirectionModeName="Unidirectional" StagePosX="68900.37 µm" StagePosY="47391.48 µm" StageRangeX="126999.93 µm" StageRangeY="82999.96 µm" FlipX="1" FlipY="1" SwapXY="1" Magnification="40" ObjectivePos="2" ObjectiveName="HC PL APO CS2    40x/1.30 OIL " ObjectiveNumber="11506358" MicroscopeModel="DMI8-CS" IsInverseMicroscopeModel="1" Immersion="OIL" NumericalAperture="1.3" RefractionIndex="1.518" IsFCSFilterAutomationActive="0" IsSMDChaserUVAOTFAutomationActive="0" CanDoCSMode="1" ActiveCS_SubModeForTLD="0" ActiveCS_SubModeForTLDName="Scan-BF" RldFluoCubePos="6" RldCubeAutoSelectionEnabled="0" LastNonMP_MFP_FW_Name="" LastNonMP_Pol_FW_Name="" ScanSpeed="400 Hz" InDimension="1024" OutDimension="1024" UseScanFormatRestriction="0" Zoom="2" BaseZoom="0.75" PanFirstDim="-1093.25 µm" PanSecondDim="-1.76551685497735E-04" ScanDirectionX="1" ScanDirectionXName="Unidirectional" Pinhole="65.3 µm" PinholeAiry="999.4 mAU" EmissionWavelengthForPinholeAiryCalculation="580 nm" FrameAverage="1" LineAverage="1" FrameAccumulation="1" Line_Accumulation="1" AreBleachPointsEnabled="0" InTrigger="-1" OutTrigger="-1" IsRoiScanEnable="0" Is3DLimitedRoiScanEnable="0" ZCompensationModes="0" WizardMode="0" IsConstantIntegrationTimeActive="1" PixelDwellTime="0.0000006" SystemSerialNumber="8110002048">
+            <EasySRMappingArray />
+            <EasySRSlider SRRelative="75" ThreeDRelative="0" GentleRelative="25" />
+            <Quantity Value="2.99978542307417E-06" Unit="m" />
+            <AdditionalZPositionList>
+              <AdditionalZPosition Valid="1" SuperZMode="1" SuperZModeName="RestrictedRange" ZMode="1" ZUseModeName="z-galvo" ZPosition="-1.59386301610221E-05" />
+              <AdditionalZPosition Valid="1" SuperZMode="1" SuperZModeName="RestrictedRange" ZMode="2" ZUseModeName="z-wide" ZPosition="0.00534665663" />
+            </AdditionalZPositionList>
+            <ShutterList>
+              <Shutter Version="0" LightSourceType="1" LightSourceName="UV" IsActive="1">
+                <BeamRoute Version="0">
+                  <BeamPosition BeamPositionLevel="0" BeamPosition="30" />
+                </BeamRoute>
+              </Shutter>
+              <Shutter Version="0" LightSourceType="0" LightSourceName="Visible" IsActive="1">
+                <BeamRoute Version="0">
+                  <BeamPosition BeamPositionLevel="0" BeamPosition="10" />
+                </BeamRoute>
+              </Shutter>
+            </ShutterList>
+            <BleachPoints>
+              <LMSDataContainerHeader Version="2">
+                <Element Name="BleachPointROISet" Visibility="2" CopyOption="1" UniqueID="3725bd66-f6ab-11f0-9215-3c5282584da5">
+                  <Data>
+                    <ROISet ROISetType="1" PossibleChildROITypes="-1" PossibleROITransforms="65535" PossibleROIActions="65535" />
+                  </Data>
+                  <Memory Size="0" MemoryBlockID="MemBlock_120" />
+                  <Children />
+                </Element>
+              </LMSDataContainerHeader>
+            </BleachPoints>
+            <ATLConfocalBleachPointsSettings />
+            <FilterWheel FluorifierAutoSelection="0" BeamSplitterAutoSelection="1" StedBeamSelectionPinholeCoupling="0" MultiFunctionPortAutoSelection="0" BeamMergerAutoSelectionEnabled="1">
+              <Wheel Version="0" Qualifier="40" FilterWheelName="Excitation Beam Splitter" FilterIndex="4" FilterName="DD 488/594" IsSpectrumTurnMode="0" FilterSpectrumPos="0" IndexChanged="1" SpectrumChanged="0" FilterDisplayValue="DD 488/594" FilterType="Excitation Beam Splitter">
+                <BeamRoute Version="0" />
+              </Wheel>
+              <Wheel Version="0" Qualifier="160" FilterWheelName="Galvo Slider" FilterIndex="0" FilterName="Galvo X Normal " IsSpectrumTurnMode="0" FilterSpectrumPos="0" IndexChanged="0" SpectrumChanged="0" FilterDisplayValue="Galvo X Normal " FilterType="Galvo Slider">
+                <BeamRoute Version="0" />
+              </Wheel>
+              <Wheel Version="0" Qualifier="200" FilterWheelName="Galvo Resonant Pan" FilterIndex="0" FilterName="Galvo X Pan Center " IsSpectrumTurnMode="0" FilterSpectrumPos="0" IndexChanged="0" SpectrumChanged="0" FilterDisplayValue="Galvo X Pan Center " FilterType="Galvo Resonant Pan">
+                <BeamRoute Version="0" />
+              </Wheel>
+              <Wheel Version="0" Qualifier="170" FilterWheelName="Target Slider" FilterIndex="0" FilterName="Target Park " IsSpectrumTurnMode="0" FilterSpectrumPos="0" IndexChanged="0" SpectrumChanged="0" FilterDisplayValue="Target Park " FilterType="Target Slider">
+                <BeamRoute Version="0" />
+              </Wheel>
+              <Wheel Version="0" Qualifier="31" FilterWheelName="X2 Lens Changer" FilterIndex="0" FilterName="CS2 UV Optics 1 " IsSpectrumTurnMode="0" FilterSpectrumPos="0" IndexChanged="0" SpectrumChanged="0" FilterDisplayValue="CS2 UV Optics 1 " FilterType="Unknown Filter">
+                <BeamRoute Version="0" />
+              </Wheel>
+            </FilterWheel>
+            <Spectro>
+              <MultiBand Channel="1" ChannelName="Channel 1" LeftWorld="418" RightWorld="470.029151943463" TargetWaveLengthBegin="418" TargetWaveLengthEnd="470.029151943463" DyeName="" />
+              <MultiBand Channel="2" ChannelName="Channel 2" LeftWorld="511.25" RightWorld="563.75" TargetWaveLengthBegin="511.25" TargetWaveLengthEnd="563.75" DyeName="" />
+              <MultiBand Channel="3" ChannelName="Channel 3" LeftWorld="605.861307420496" RightWorld="658.361307420496" TargetWaveLengthBegin="605.861307420496" TargetWaveLengthEnd="658.361307420496" DyeName="" />
+              <MultiBand Channel="4" ChannelName="Channel 4" LeftWorld="721.25" RightWorld="773.75" TargetWaveLengthBegin="721.25" TargetWaveLengthEnd="773.75" DyeName="" />
+            </Spectro>
+            <AotfList>
+              <Aotf Version="0" LightSourceName="UV" LightSourceType="1" OpenVirtual="0" IsChanged="0" CanDoPulseFreq="0" PulsFreq="0" CanDoTwoLaserPIE="0" TwoLaserPIEPossibleLastState="0" TwoLaserPIEActive="0" AotfType="UV">
+                <BeamRoute Version="0">
+                  <BeamPosition BeamPositionLevel="0" BeamPosition="30" />
+                </BeamRoute>
+                <LaserLineSetting LaserLine="405" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="0" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Shutter: on, Intensity: 0.0000%" />
+              </Aotf>
+              <Aotf Version="0" LightSourceName="Visible" LightSourceType="0" OpenVirtual="0" IsChanged="1" CanDoPulseFreq="0" PulsFreq="0" CanDoTwoLaserPIE="0" TwoLaserPIEPossibleLastState="0" TwoLaserPIEActive="0" AotfType="Visible">
+                <BeamRoute Version="0">
+                  <BeamPosition BeamPositionLevel="0" BeamPosition="10" />
+                </BeamRoute>
+                <LaserLineSetting LaserLine="458" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="0" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Shutter: on, Intensity: 0.0000%" />
+                <LaserLineSetting LaserLine="488" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="1" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Shutter: on, Intensity: 0.0000%" />
+                <LaserLineSetting LaserLine="514" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="2" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Shutter: on, Intensity: 0.0000%" />
+                <LaserLineSetting LaserLine="561" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="3" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Shutter: on, Intensity: 0.0000%" />
+                <LaserLineSetting LaserLine="594" IntensityDev="10.001293353573" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="4" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Shutter: on, Intensity: 10.0013%" />
+                <LaserLineSetting LaserLine="633" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="5" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Shutter: on, Intensity: 0.0000%" />
+              </Aotf>
+            </AotfList>
+            <LUT_List>
+              <LUT Channel="1" LutName="Gray" />
+              <LUT Channel="2" LutName="Green" />
+              <LUT Channel="3" LutName="Red" />
+              <LUT Channel="4" LutName="Blue" />
+              <LUT Channel="100" LutName="Gray" />
+              <LUT Channel="2000" LutName="Gray" />
+              <LUT Channel="2001" LutName="Green" />
+              <LUT Channel="2002" LutName="Red" />
+              <LUT Channel="2003" LutName="Blue" />
+              <LUT Channel="2004" LutName="Cyan" />
+              <LUT Channel="2005" LutName="Magenta" />
+              <LUT Channel="2006" LutName="Yellow" />
+              <LUT Channel="2007" LutName="Glow" />
+              <LUT Channel="3000" LutName="Gray" />
+            </LUT_List>
+            <DetectorList DetectorAutoSelection="1" InExternalDetectionMode="0">
+              <Detector Name="HyD 1" Type="HyD" ScanType="Internal" Channel="1" ChannelName="Channel 1" IsActive="1" Gain="100" Offset="-0.01" IsSTEDDetector="1" IsSRSDetector="0" DetectionRangeBegin="0" DetectionRangeEnd="0" Phase="0" IsFlimDetector="0" IsHPDDetector="1" IsEnabled="1" IsHPDOverloaded="0" CanDoPhotonCounting="1" AcquisitionMode="0" AcquisitionModeName="PhotonIntegration" CanDoTimeGate="0" OffsetShow="0" GainShow="100" ActiveShow="Active" Band="(418nm - 470nm)" LutName="Gray" />
+              <Detector Name="PMT 2" Type="PMT" ScanType="Internal" Channel="2" ChannelName="Channel 2" IsActive="0" Gain="0" Offset="0" IsSTEDDetector="1" IsSRSDetector="0" DetectionRangeBegin="0" DetectionRangeEnd="0" Phase="0" IsFlimDetector="0" IsHPDDetector="0" CanDoTimeGate="0" OffsetShow="0" GainShow="0" ActiveShow="Inactive" Band="(511nm - 564nm)" LutName="Green" />
+              <Detector Name="HyD 3" Type="HyD" ScanType="Internal" Channel="3" ChannelName="Channel 3" IsActive="0" Gain="100" Offset="-0.01" IsSTEDDetector="1" IsSRSDetector="0" DetectionRangeBegin="0" DetectionRangeEnd="0" Phase="0" IsFlimDetector="0" IsHPDDetector="1" IsEnabled="1" IsHPDOverloaded="0" CanDoPhotonCounting="1" AcquisitionMode="0" AcquisitionModeName="PhotonIntegration" CanDoTimeGate="0" OffsetShow="0" GainShow="100" ActiveShow="Inactive" Band="(606nm - 658nm)" LutName="Red" />
+              <Detector Name="PMT 4" Type="PMT" ScanType="Internal" Channel="4" ChannelName="Channel 4" IsActive="0" Gain="0" Offset="0" IsSTEDDetector="1" IsSRSDetector="0" DetectionRangeBegin="0" DetectionRangeEnd="0" Phase="0" IsFlimDetector="0" IsHPDDetector="0" CanDoTimeGate="0" OffsetShow="0" GainShow="0" ActiveShow="Inactive" Band="(721nm - 774nm)" LutName="Blue" />
+              <Detector Name="PMT Trans" Type="PMT" ScanType="TLD" Channel="100" ChannelName="Transmission Channel" IsActive="1" Gain="300" Offset="0" IsSTEDDetector="0" IsSRSDetector="0" DetectionRangeBegin="0" DetectionRangeEnd="0" Phase="0" IsFlimDetector="0" IsHPDDetector="0" CanDoTimeGate="0" OffsetShow="0" GainShow="300" ActiveShow="Active" Band="" LutName="Gray" />
+            </DetectorList>
+            <LaserArray>
+              <Laser Version="6" LightSourceType="1" LaserName="Diode 405" PowerState="On" StedAlignFlag="0" CanDoLinearOutputPower="0" CanDoPulsing="0" CanDoOutputPowerWatt="1" HighPowerModeActive="0" LightSourceName="UV" OutputPowerWatt="0" Wavelength="405" CanDoChangeWavelength="0" OutputPowerDisplay="On">
+                <BeamRoute Version="0">
+                  <BeamPosition BeamPositionLevel="0" BeamPosition="30" />
+                </BeamRoute>
+              </Laser>
+              <Laser Version="6" LightSourceType="0" LaserName="Argon" PowerState="Off" StedAlignFlag="0" CanDoLinearOutputPower="1" CanDoPulsing="0" CanDoOutputPowerWatt="1" HighPowerModeActive="0" LightSourceName="Visible" OutputPowerWatt="0" OutputPowerPercentage="0" Wavelength="458" CanDoChangeWavelength="0" OutputPowerDisplay="Off">
+                <BeamRoute Version="0">
+                  <BeamPosition BeamPositionLevel="0" BeamPosition="10" />
+                </BeamRoute>
+              </Laser>
+              <Laser Version="6" LightSourceType="0" LaserName="DPSS 561" PowerState="Off" StedAlignFlag="0" CanDoLinearOutputPower="0" CanDoPulsing="0" CanDoOutputPowerWatt="1" HighPowerModeActive="0" LightSourceName="Visible" OutputPowerWatt="0" Wavelength="561" CanDoChangeWavelength="0" OutputPowerDisplay="Off">
+                <BeamRoute Version="0">
+                  <BeamPosition BeamPositionLevel="0" BeamPosition="10" />
+                </BeamRoute>
+              </Laser>
+              <Laser Version="6" LightSourceType="0" LaserName="HeNe 594" PowerState="On" StedAlignFlag="0" CanDoLinearOutputPower="0" CanDoPulsing="0" CanDoOutputPowerWatt="1" HighPowerModeActive="0" LightSourceName="Visible" OutputPowerWatt="0" Wavelength="594" CanDoChangeWavelength="0" OutputPowerDisplay="On">
+                <BeamRoute Version="0">
+                  <BeamPosition BeamPositionLevel="0" BeamPosition="10" />
+                </BeamRoute>
+              </Laser>
+              <Laser Version="6" LightSourceType="0" LaserName="HeNe 633" PowerState="Off" StedAlignFlag="0" CanDoLinearOutputPower="0" CanDoPulsing="0" CanDoOutputPowerWatt="1" HighPowerModeActive="0" LightSourceName="Visible" OutputPowerWatt="0" Wavelength="633" CanDoChangeWavelength="0" OutputPowerDisplay="Off">
+                <BeamRoute Version="0">
+                  <BeamPosition BeamPositionLevel="0" BeamPosition="10" />
+                </BeamRoute>
+              </Laser>
+            </LaserArray>
+            <OnlineDyeSeparation Enabled="0" KeepRawImage="0" Detectors="0" Channels="0" Normalize="0">
+              <OnlineDyeSeparationDetectorList />
+              <OnlineDyeSeparationChannelList />
+            </OnlineDyeSeparation>
+            <VariableBeamExpanderFactors />
+          </ATLConfocalSettingDefinition>
+        </LDM_Block_Sequential_Master>
+        <LDM_Block_Sequential_List>
+          <ATLConfocalSettingDefinition VersionNumber="13" UserSettingName="Seq. 1" IsUserSettingNameSet="1" AreBleachPointsEnabled="0" IsRoiScanEnable="0" ZCompensationModes="0" WizardMode="0">
+            <AotfList>
+              <Aotf Version="0" LightSourceName="UV" LightSourceType="1" OpenVirtual="0" IsChanged="1" CanDoPulseFreq="0" PulsFreq="0" CanDoTwoLaserPIE="0" TwoLaserPIEPossibleLastState="0" TwoLaserPIEActive="0" AotfType="UV">
+                <BeamRoute Version="0">
+                  <BeamPosition BeamPositionLevel="0" BeamPosition="30" />
+                </BeamRoute>
+                <LaserLineSetting LaserLine="405" IntensityDev="2.00455020598905" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="0" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Intensity: 2.0046%" />
+              </Aotf>
+              <Aotf Version="0" LightSourceName="Visible" LightSourceType="0" OpenVirtual="0" IsChanged="1" CanDoPulseFreq="0" PulsFreq="0" CanDoTwoLaserPIE="0" TwoLaserPIEPossibleLastState="0" TwoLaserPIEActive="0" AotfType="Visible">
+                <BeamRoute Version="0">
+                  <BeamPosition BeamPositionLevel="0" BeamPosition="10" />
+                </BeamRoute>
+                <LaserLineSetting LaserLine="458" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="0" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Intensity: 0.0000%" />
+                <LaserLineSetting LaserLine="488" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="1" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Intensity: 0.0000%" />
+                <LaserLineSetting LaserLine="514" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="2" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Intensity: 0.0000%" />
+                <LaserLineSetting LaserLine="561" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="3" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Intensity: 0.0000%" />
+                <LaserLineSetting LaserLine="594" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="4" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Intensity: 0.0000%" />
+                <LaserLineSetting LaserLine="633" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="5" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Intensity: 0.0000%" />
+              </Aotf>
+            </AotfList>
+            <LUT_List>
+              <LUT Channel="1" LutName="Blue" />
+              <LUT Channel="2" LutName="Green" />
+              <LUT Channel="3" LutName="Red" />
+              <LUT Channel="4" LutName="Blue" />
+              <LUT Channel="100" LutName="Gray" />
+              <LUT Channel="2000" LutName="Gray" />
+              <LUT Channel="2001" LutName="Green" />
+              <LUT Channel="2002" LutName="Red" />
+              <LUT Channel="2003" LutName="Blue" />
+              <LUT Channel="2004" LutName="Cyan" />
+              <LUT Channel="2005" LutName="Magenta" />
+              <LUT Channel="2006" LutName="Yellow" />
+              <LUT Channel="2007" LutName="Glow" />
+              <LUT Channel="3000" LutName="Gray" />
+            </LUT_List>
+            <DetectorList DetectorAutoSelection="1" InExternalDetectionMode="0">
+              <Detector Name="HyD 1" Type="HyD" ScanType="Internal" Channel="1" ChannelName="Channel 1" IsActive="1" OffsetShow="0" GainShow="0" ActiveShow="Active" LutName="Blue" />
+              <Detector Name="PMT 2" Type="PMT" ScanType="Internal" Channel="2" ChannelName="Channel 2" IsActive="0" OffsetShow="0" GainShow="0" ActiveShow="Inactive" LutName="Green" />
+              <Detector Name="HyD 3" Type="HyD" ScanType="Internal" Channel="3" ChannelName="Channel 3" IsActive="0" OffsetShow="0" GainShow="0" ActiveShow="Inactive" LutName="Red" />
+              <Detector Name="PMT 4" Type="PMT" ScanType="Internal" Channel="4" ChannelName="Channel 4" IsActive="0" OffsetShow="0" GainShow="0" ActiveShow="Inactive" LutName="Blue" />
+              <Detector Name="PMT Trans" Type="PMT" ScanType="TLD" Channel="100" ChannelName="Transmission Channel" IsActive="1" OffsetShow="0" GainShow="0" ActiveShow="Active" LutName="Gray" />
+            </DetectorList>
+          </ATLConfocalSettingDefinition>
+          <ATLConfocalSettingDefinition VersionNumber="13" UserSettingName="Seq. 2" IsUserSettingNameSet="1" AreBleachPointsEnabled="0" IsRoiScanEnable="0" ZCompensationModes="0" WizardMode="0">
+            <AotfList>
+              <Aotf Version="0" LightSourceName="UV" LightSourceType="1" OpenVirtual="0" IsChanged="0" CanDoPulseFreq="0" PulsFreq="0" CanDoTwoLaserPIE="0" TwoLaserPIEPossibleLastState="0" TwoLaserPIEActive="0" AotfType="UV">
+                <BeamRoute Version="0">
+                  <BeamPosition BeamPositionLevel="0" BeamPosition="30" />
+                </BeamRoute>
+                <LaserLineSetting LaserLine="405" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="0" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Intensity: 0.0000%" />
+              </Aotf>
+              <Aotf Version="0" LightSourceName="Visible" LightSourceType="0" OpenVirtual="0" IsChanged="1" CanDoPulseFreq="0" PulsFreq="0" CanDoTwoLaserPIE="0" TwoLaserPIEPossibleLastState="0" TwoLaserPIEActive="0" AotfType="Visible">
+                <BeamRoute Version="0">
+                  <BeamPosition BeamPositionLevel="0" BeamPosition="10" />
+                </BeamRoute>
+                <LaserLineSetting LaserLine="458" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="0" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Intensity: 0.0000%" />
+                <LaserLineSetting LaserLine="488" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="1" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Intensity: 0.0000%" />
+                <LaserLineSetting LaserLine="514" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="2" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Intensity: 0.0000%" />
+                <LaserLineSetting LaserLine="561" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="3" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Intensity: 0.0000%" />
+                <LaserLineSetting LaserLine="594" IntensityDev="10.0819809332953" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="4" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Intensity: 10.0820%" />
+                <LaserLineSetting LaserLine="633" IntensityDev="0" IntensityLowDev="0" AOBSIntensityDev="-1" AOBSIntensityLowDev="-1" EnableDoubleMode="0" LineIndex="5" SequenceIndex="0" LineDeactivationFlags="0" IsLineChecked="1" OutCheckedIntensity="0" SuppressionMode="-1" IsVisible="1" CanDoFastModulation="1" IntensityShow="Intensity: 0.0000%" />
+              </Aotf>
+            </AotfList>
+            <LUT_List>
+              <LUT Channel="1" LutName="Blue" />
+              <LUT Channel="2" LutName="Green" />
+              <LUT Channel="3" LutName="Red" />
+              <LUT Channel="4" LutName="Blue" />
+              <LUT Channel="100" LutName="Gray" />
+              <LUT Channel="2000" LutName="Gray" />
+              <LUT Channel="2001" LutName="Green" />
+              <LUT Channel="2002" LutName="Red" />
+              <LUT Channel="2003" LutName="Blue" />
+              <LUT Channel="2004" LutName="Cyan" />
+              <LUT Channel="2005" LutName="Magenta" />
+              <LUT Channel="2006" LutName="Yellow" />
+              <LUT Channel="2007" LutName="Glow" />
+              <LUT Channel="3000" LutName="Gray" />
+            </LUT_List>
+            <DetectorList DetectorAutoSelection="1" InExternalDetectionMode="0">
+              <Detector Name="HyD 1" Type="HyD" ScanType="Internal" Channel="1" ChannelName="Channel 1" IsActive="0" OffsetShow="0" GainShow="0" ActiveShow="Inactive" LutName="Blue" />
+              <Detector Name="PMT 2" Type="PMT" ScanType="Internal" Channel="2" ChannelName="Channel 2" IsActive="0" OffsetShow="0" GainShow="0" ActiveShow="Inactive" LutName="Green" />
+              <Detector Name="HyD 3" Type="HyD" ScanType="Internal" Channel="3" ChannelName="Channel 3" IsActive="1" OffsetShow="0" GainShow="0" ActiveShow="Active" LutName="Red" />
+              <Detector Name="PMT 4" Type="PMT" ScanType="Internal" Channel="4" ChannelName="Channel 4" IsActive="0" OffsetShow="0" GainShow="0" ActiveShow="Inactive" LutName="Blue" />
+              <Detector Name="PMT Trans" Type="PMT" ScanType="TLD" Channel="100" ChannelName="Transmission Channel" IsActive="0" OffsetShow="0" GainShow="0" ActiveShow="Inactive" LutName="Gray" />
+            </DetectorList>
+          </ATLConfocalSettingDefinition>
+        </LDM_Block_Sequential_List>
+        <LDM_Block_Sequential_Execution_Mask>
+          <InstrumentSettingMask AOTF="1" PMTs_on_off="1" Z_Compensation="0" />
+        </LDM_Block_Sequential_Execution_Mask>
+      </LDM_Block_Sequential>
+    </Attachment>
+  </Image>
+</Data>
