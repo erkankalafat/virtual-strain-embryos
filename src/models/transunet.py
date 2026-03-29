@@ -161,11 +161,22 @@ class _PatchEmbedding(nn.Module):
         nn.init.trunc_normal_(self.pos_embed, std=0.02)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # x: (B, C, H', W') where H'=W'=grid_size
+        # x: (B, C, H', W') where H'=W' may differ from training grid_size
         x = self.proj(x)  # (B, embed_dim, H', W')
         B, C, H, W = x.shape
         x = x.flatten(2).transpose(1, 2)  # (B, N, embed_dim)
-        x = x + self.pos_embed[:, : H * W, :]
+
+        # Interpolate positional embedding if spatial size changed (e.g. 512->1024)
+        N = H * W
+        if N != self.pos_embed.shape[1]:
+            pos = self.pos_embed  # (1, grid^2, embed_dim)
+            grid_old = int(pos.shape[1] ** 0.5)
+            pos = pos.reshape(1, grid_old, grid_old, -1).permute(0, 3, 1, 2)
+            pos = nn.functional.interpolate(pos, size=(H, W), mode="bilinear", align_corners=False)
+            pos = pos.permute(0, 2, 3, 1).reshape(1, N, -1)
+            x = x + pos
+        else:
+            x = x + self.pos_embed[:, :N, :]
         return x
 
 
@@ -343,6 +354,12 @@ class TransUNetRegressor(nn.Module):
                 nn.init.trunc_normal_(m.weight, std=0.02)
                 if m.bias is not None:
                     nn.init.zeros_(m.bias)
+
+        # Zero-init the output head so model starts predicting all-black.
+        # Sigmoid(0) = 0.5, so we bias to a large negative value for ~0 output.
+        head_conv = self.head[0]
+        nn.init.zeros_(head_conv.weight)
+        nn.init.constant_(head_conv.bias, -5.0)  # Sigmoid(-5) ≈ 0.007
 
     # -----------------------------------------------------------------
     def forward(self, x: torch.Tensor) -> torch.Tensor:

@@ -565,6 +565,11 @@ class SwinUNetRegressor(nn.Module):
 
         self.apply(self._init_weights)
 
+        # Zero-init output so model starts predicting all-black.
+        # Sigmoid(-5) ≈ 0.007, matching the sparse target distribution.
+        nn.init.zeros_(self.output_proj.weight)
+        nn.init.constant_(self.output_proj.bias, -5.0)
+
     # ------------------------------------------------------------------
     @staticmethod
     def _init_weights(m: nn.Module):
