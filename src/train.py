@@ -548,7 +548,7 @@ def train_diffusion(config):
 
                 # Generate a few samples for metrics (expensive, so limit)
                 if i == 0:
-                    sampled = model.sample(bf[:2], use_ddim=True, ddim_steps=50)
+                    sampled = model.sample(bf[:2], method="ddim", num_steps=50)
                     val_metrics.update(compute_metrics(sampled, target[:2]))
                     save_sample_images(sampled, target[:2], bf[:2], epoch,
                                        str(output_dir / "samples"))

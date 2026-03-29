@@ -585,6 +585,23 @@ class ConditionalDDPM(nn.Module):
 
         return {"loss": loss, "pred_noise": pred_noise}
 
+    def training_loss(
+        self,
+        if_images: torch.Tensor,
+        bf_images: torch.Tensor,
+    ) -> torch.Tensor:
+        """Convenience wrapper matching the training loop's expected API.
+
+        Args:
+            if_images: Ground-truth IF target (B, C_out, H, W).
+            bf_images: Brightfield condition (B, C_in, H, W).
+
+        Returns:
+            Scalar loss tensor.
+        """
+        result = self.forward(bf_images, if_images)
+        return result["loss"]
+
     # ------------------------------------------------------------------
     # DDPM reverse sampling
     # ------------------------------------------------------------------
