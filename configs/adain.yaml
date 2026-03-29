@@ -1,0 +1,37 @@
+# AdaIN Style Transfer - Virtual Staining
+# Also usable for Fixed BF -> Live BF domain adaptation
+# python -m src.train --config configs/adain.yaml
+
+model:
+  name: adain
+  in_channels: 3
+  out_channels: 3          # 3 for overlay/domain adaptation, 2 for DAPI+Phalloidin
+  encoder_type: vgg19
+  decoder_channels: [256, 128, 64]
+  use_efdm: false          # Set true for Exact Feature Distribution Matching
+
+data:
+  root_dir: /content/drive/MyDrive/embryo_data
+  target_channels: overlay  # Use 'overlay' for style transfer, 'both' for IF prediction
+  img_size: 512
+  batch_size: 4
+  num_workers: 4
+  val_split: 0.15
+  test_split: 0.10
+  seed: 42
+
+loss:
+  type: l1                 # Fallback - AdaIN uses its own content+style losses
+  lambda_content: 1.0
+  lambda_style: 10.0
+
+optimizer:
+  lr: 1.0e-4
+  weight_decay: 0
+  step_size: 20            # LR decay step
+
+training:
+  epochs: 50
+  amp: false
+  output_dir: outputs
+  save_every: 10

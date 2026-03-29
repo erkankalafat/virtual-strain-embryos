@@ -1,0 +1,39 @@
+# Conditional DDPM - Virtual Staining via Diffusion
+# Conditioned on BF, iteratively denoises to produce IF
+# python -m src.train --config configs/diffusion.yaml
+
+model:
+  name: diffusion
+  in_channels: 3           # BF condition channels
+  out_channels: 2          # DAPI + Phalloidin
+  base_channels: 64
+  channel_mults: [1, 2, 4, 8]
+  num_res_blocks: 2
+  time_embed_dim: 256
+  num_timesteps: 1000
+  beta_schedule: linear    # 'linear' or 'cosine'
+
+data:
+  root_dir: /content/drive/MyDrive/embryo_data
+  target_channels: both
+  img_size: 256            # Smaller for diffusion (memory intensive)
+  batch_size: 2            # Diffusion needs more memory
+  num_workers: 4
+  val_split: 0.15
+  test_split: 0.10
+  seed: 42
+
+loss:
+  # Not used directly - diffusion has its own MSE noise prediction loss
+  type: l1
+
+optimizer:
+  lr: 2.0e-4
+  weight_decay: 1.0e-4
+  min_lr: 1.0e-6
+
+training:
+  epochs: 300              # Diffusion needs more epochs
+  amp: false               # Can be tricky with diffusion
+  output_dir: outputs
+  save_every: 25
