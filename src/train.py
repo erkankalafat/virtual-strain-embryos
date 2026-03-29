@@ -71,6 +71,45 @@ def save_sample_images(pred, target, bf, epoch, output_dir):
         pass  # Don't fail training over visualization
 
 
+def show_inline_samples(pred, target, bf, epoch, n_samples=3):
+    """Display BF | Predicted | Ground Truth inline in Colab during training."""
+    try:
+        import matplotlib.pyplot as plt
+        from IPython.display import display
+
+        def to_composite(t):
+            if t.shape[0] == 2:
+                rgb = np.zeros((*t.shape[1:], 3))
+                rgb[:, :, 2] = t[0].numpy()
+                rgb[:, :, 0] = t[1].numpy()
+                return rgb
+            elif t.shape[0] == 1:
+                return np.stack([t[0].numpy()] * 3, axis=-1)
+            return t.permute(1, 2, 0).numpy()
+
+        n = min(n_samples, pred.size(0))
+        fig, axes = plt.subplots(n, 3, figsize=(15, 5 * n))
+        if n == 1:
+            axes = axes[np.newaxis, :]
+
+        for i in range(n):
+            axes[i, 0].imshow(bf[i, 0].cpu().numpy(), cmap='gray')
+            axes[i, 0].set_title('BF Input')
+            axes[i, 1].imshow(to_composite(target[i].cpu()))
+            axes[i, 1].set_title('Ground Truth IF')
+            axes[i, 2].imshow(to_composite(pred[i].cpu().clamp(0, 1)))
+            axes[i, 2].set_title(f'Predicted (epoch {epoch})')
+            for ax in axes[i]:
+                ax.axis('off')
+
+        plt.suptitle(f'Validation Samples — Epoch {epoch}', fontsize=13)
+        plt.tight_layout()
+        display(fig)
+        plt.close(fig)
+    except Exception:
+        pass
+
+
 class EarlyStopping:
     """Stop training when val loss stops improving.
 
@@ -262,6 +301,10 @@ def train_regression(config):
                 # Save sample on first batch
                 if val_loss == loss.item():
                     save_sample_images(pred, target, bf, epoch, str(output_dir / "samples"))
+                    # Show inline samples periodically
+                    preview_every = config["training"].get("preview_every", 20)
+                    if epoch % preview_every == 0 or epoch == 1:
+                        show_inline_samples(pred, target, bf, epoch, n_samples=3)
 
         avg_val_loss = val_loss / max(len(val_loader), 1)
 
@@ -440,6 +483,9 @@ def train_gan(config):
 
                 if len(val_metrics.values["psnr"]) == 1:
                     save_sample_images(pred, target, bf, epoch, str(output_dir / "samples"))
+                    preview_every = config["training"].get("preview_every", 20)
+                    if epoch % preview_every == 0 or epoch == 1:
+                        show_inline_samples(pred, target, bf, epoch, n_samples=3)
 
         v = val_metrics.summary()
 
@@ -552,6 +598,9 @@ def train_diffusion(config):
                     val_metrics.update(compute_metrics(sampled, target[:2]))
                     save_sample_images(sampled, target[:2], bf[:2], epoch,
                                        str(output_dir / "samples"))
+                    preview_every = config["training"].get("preview_every", 20)
+                    if epoch % preview_every == 0 or epoch == 1:
+                        show_inline_samples(sampled, target[:2], bf[:2], epoch, n_samples=2)
 
         avg_val_loss = val_loss / max(len(val_loader), 1)
         v = val_metrics.summary()
@@ -666,6 +715,9 @@ def train_style_transfer(config):
 
                 if len(val_metrics.values["psnr"]) == 1:
                     save_sample_images(output, target, bf, epoch, str(output_dir / "samples"))
+                    preview_every = config["training"].get("preview_every", 20)
+                    if epoch % preview_every == 0 or epoch == 1:
+                        show_inline_samples(output, target, bf, epoch, n_samples=3)
 
         avg_val_loss = val_loss / max(len(val_loader), 1)
         v = val_metrics.summary()
