@@ -763,6 +763,7 @@ def train_style_transfer(config):
 TRAIN_FN_MAP = {
     "transunet": train_regression,
     "swin_unet": train_regression,
+    "convnext_unet": train_regression,
     "pix2pixhd": train_gan,
     "diffusion": train_diffusion,
     "adain": train_style_transfer,

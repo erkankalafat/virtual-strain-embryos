@@ -1,0 +1,52 @@
+# ConvNeXt U-Net Regression - Virtual Staining
+# Pure CNN — no window artifacts, handles any resolution natively
+# python -m src.train --config configs/convnext_unet.yaml
+
+model:
+  name: convnext_unet
+  in_channels: 3
+  out_channels: 2
+  dims: [96, 192, 384, 768]      # Channel dimensions per encoder stage
+  depths: [3, 3, 9, 3]            # ConvNeXt blocks per stage
+  drop_path_rate: 0.1
+  layer_scale_init: 1.0e-6
+
+data:
+  root_dir: /content/drive/MyDrive/embryo_data
+  target_channels: both
+  img_size: 512
+  batch_size: 8
+  num_workers: 4
+  val_split: 0.15
+  test_split: 0.10
+  seed: 42
+
+loss:
+  type: combined
+  losses:
+    - name: weighted_l1
+      weight: 1.0
+      params:
+        signal_weight: 200.0
+        bg_weight: 1.0
+        threshold: 0.005
+    - name: dice
+      weight: 1.0
+      params:
+        smooth: 1.0
+        per_channel: true
+
+optimizer:
+  lr: 2.0e-4
+  weight_decay: 1.0e-4
+
+scheduler:
+  min_lr: 1.0e-6
+
+training:
+  epochs: 200
+  amp: false
+  output_dir: outputs
+  save_every: 20
+  patience: 40
+  preview_every: 20
