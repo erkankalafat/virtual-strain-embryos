@@ -185,6 +185,86 @@ class WeightedL1Loss(nn.Module):
         return (pixel_loss * weight).mean()
 
 
+class FocalL1Loss(nn.Module):
+    """Focal L1 loss — upweights pixels where the model is currently wrong.
+
+    Unlike WeightedL1 which uses a fixed mask based on target values,
+    FocalL1 dynamically focuses on hard-to-predict pixels. Pixels with
+    large error get exponentially more weight during training.
+
+    Loss = mean( |pred - target|^gamma * |pred - target| )
+         = mean( |pred - target|^(gamma + 1) )
+
+    gamma=0 -> standard L1
+    gamma=1 -> squared L1 (focuses on large errors)
+    gamma=2 -> cubed L1 (strongly focuses on large errors)
+
+    Args:
+        gamma: Focusing parameter. Higher = more focus on hard pixels.
+        signal_boost: Extra multiplier for pixels where target > threshold.
+    """
+
+    def __init__(self, gamma=1.0, signal_boost=1.0, threshold=0.005):
+        super().__init__()
+        self.gamma = gamma
+        self.signal_boost = signal_boost
+        self.threshold = threshold
+
+    def forward(self, pred, target):
+        error = torch.abs(pred - target)
+        focal_weight = error.detach() ** self.gamma  # Detach so gradient only flows through error
+
+        loss = focal_weight * error
+
+        if self.signal_boost > 1.0:
+            signal_mask = (target > self.threshold).float()
+            boost = 1.0 + (self.signal_boost - 1.0) * signal_mask
+            loss = loss * boost
+
+        return loss.mean()
+
+
+class SoftDiceLoss(nn.Module):
+    """Soft Dice loss for continuous (regression) predictions.
+
+    Adapted from segmentation Dice loss to work with continuous targets.
+    Measures overlap between predicted and target intensity distributions.
+    Strongly penalizes missing signal regions — complementary to L1.
+
+    Dice = 2 * sum(pred * target) / (sum(pred^2) + sum(target^2) + eps)
+    Loss = 1 - Dice
+
+    Args:
+        smooth: Smoothing constant to avoid division by zero.
+        per_channel: If True, compute Dice per channel and average.
+    """
+
+    def __init__(self, smooth=1.0, per_channel=True):
+        super().__init__()
+        self.smooth = smooth
+        self.per_channel = per_channel
+
+    def forward(self, pred, target):
+        if self.per_channel:
+            dice_sum = 0.0
+            n_channels = pred.size(1)
+            for c in range(n_channels):
+                p = pred[:, c].reshape(pred.size(0), -1)
+                t = target[:, c].reshape(target.size(0), -1)
+                intersection = (p * t).sum(dim=1)
+                union = (p ** 2).sum(dim=1) + (t ** 2).sum(dim=1)
+                dice = (2.0 * intersection + self.smooth) / (union + self.smooth)
+                dice_sum += dice.mean()
+            return 1.0 - dice_sum / n_channels
+        else:
+            p = pred.reshape(pred.size(0), -1)
+            t = target.reshape(target.size(0), -1)
+            intersection = (p * t).sum(dim=1)
+            union = (p ** 2).sum(dim=1) + (t ** 2).sum(dim=1)
+            dice = (2.0 * intersection + self.smooth) / (union + self.smooth)
+            return 1.0 - dice.mean()
+
+
 # ---------------------------------------------------------------------------
 # Perceptual (VGG) Loss
 # ---------------------------------------------------------------------------
@@ -310,6 +390,8 @@ class CombinedLoss(nn.Module):
     LOSS_MAP = {
         "l1": L1Loss,
         "weighted_l1": WeightedL1Loss,
+        "focal_l1": FocalL1Loss,
+        "dice": SoftDiceLoss,
         "ms_ssim": MSSSIMLoss,
         "perceptual": PerceptualLoss,
     }
