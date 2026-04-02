@@ -340,6 +340,96 @@ class TransUNetRegressor(nn.Module):
 
         self._init_weights()
 
+        # Load DINO pretrained weights into transformer blocks if specified
+        dino_path = mcfg.get("dino_checkpoint", None)
+        if dino_path:
+            self._load_dino_transformer(dino_path)
+
+    # -----------------------------------------------------------------
+    def _load_dino_transformer(self, checkpoint_path: str) -> None:
+        """Load DINO ViT-S weights into the transformer encoder blocks.
+
+        Maps DINO's block weights (norm1, attn.qkv, attn.proj, norm2, mlp)
+        to TransUNet's _TransformerBlock structure. Only loads the transformer
+        blocks and positional embedding — CNN encoder/decoder are untouched.
+        """
+        import os
+        print(f"Loading DINO transformer weights: {checkpoint_path}")
+        ckpt = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+
+        # Handle different checkpoint formats
+        if isinstance(ckpt, dict):
+            # Clean state dict: strip common prefixes
+            state_dict = ckpt
+            cleaned = {}
+            for k, v in state_dict.items():
+                for prefix in ["backbone.", "module.", "encoder.", "model."]:
+                    if k.startswith(prefix):
+                        k = k[len(prefix):]
+                        break
+                cleaned[k] = v
+        else:
+            cleaned = ckpt
+
+        loaded_blocks = 0
+        # Load transformer blocks
+        for i, block in enumerate(self.transformer.blocks):
+            prefix = f"blocks.{i}."
+            block_keys = {k[len(prefix):]: v for k, v in cleaned.items()
+                          if k.startswith(prefix)}
+            if not block_keys:
+                continue
+
+            # Map DINO block keys to TransUNet _TransformerBlock
+            for key, value in block_keys.items():
+                try:
+                    parts = key.split(".")
+                    module = block
+                    for p in parts[:-1]:
+                        module = getattr(module, p)
+                    param = getattr(module, parts[-1])
+                    if param.shape == value.shape:
+                        param.data.copy_(value)
+                    else:
+                        print(f"  Shape mismatch at blocks.{i}.{key}: "
+                              f"{param.shape} vs {value.shape}, skipping")
+                except (AttributeError, RuntimeError):
+                    pass
+            loaded_blocks += 1
+
+        # Load layer norm
+        if "norm.weight" in cleaned:
+            if self.transformer.norm.weight.shape == cleaned["norm.weight"].shape:
+                self.transformer.norm.weight.data.copy_(cleaned["norm.weight"])
+                self.transformer.norm.bias.data.copy_(cleaned["norm.bias"])
+
+        # Load positional embedding (interpolate if size differs)
+        if "pos_embed" in cleaned:
+            old_pos = cleaned["pos_embed"]  # (1, 1+N_old, D)
+            # Extract patch positions (skip CLS token)
+            old_patch_pos = old_pos[:, 1:]
+            old_N = old_patch_pos.shape[1]
+            new_N = self.patch_embed.pos_embed.shape[1]
+
+            if old_N == new_N and old_patch_pos.shape[-1] == self.patch_embed.pos_embed.shape[-1]:
+                self.patch_embed.pos_embed.data.copy_(old_patch_pos)
+            elif old_patch_pos.shape[-1] == self.patch_embed.pos_embed.shape[-1]:
+                # Same embed_dim, different grid size — interpolate
+                old_grid = int(old_N ** 0.5)
+                new_grid = int(new_N ** 0.5)
+                dim = old_patch_pos.shape[-1]
+                old_patch_pos = old_patch_pos.reshape(1, old_grid, old_grid, dim).permute(0, 3, 1, 2)
+                old_patch_pos = F.interpolate(old_patch_pos, size=(new_grid, new_grid),
+                                              mode="bicubic", align_corners=False)
+                old_patch_pos = old_patch_pos.permute(0, 2, 3, 1).reshape(1, -1, dim)
+                self.patch_embed.pos_embed.data.copy_(old_patch_pos)
+                print(f"  Interpolated pos_embed: {old_grid}x{old_grid} → {new_grid}x{new_grid}")
+            else:
+                print(f"  pos_embed dim mismatch ({old_patch_pos.shape[-1]} vs "
+                      f"{self.patch_embed.pos_embed.shape[-1]}), skipping")
+
+        print(f"  Loaded DINO weights into {loaded_blocks}/{len(self.transformer.blocks)} transformer blocks")
+
     # -----------------------------------------------------------------
     def _init_weights(self) -> None:
         for m in self.modules():
