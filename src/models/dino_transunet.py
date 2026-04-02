@@ -128,8 +128,12 @@ class DINOTransUNet(nn.Module):
             kernel_size=self.patch_size, stride=self.patch_size,
         )
         self.cls_token = nn.Parameter(torch.zeros(1, 1, self.embed_dim))
-        # pos_embed will be resized dynamically
-        self.pos_embed = nn.Parameter(torch.zeros(1, 1, self.embed_dim))
+        # Default pos_embed for img_size/patch_size grid + 1 CLS token
+        img_size = mcfg.get("img_size", 512)
+        num_patches = (img_size // self.patch_size) ** 2
+        self.pos_embed = nn.Parameter(torch.zeros(1, 1 + num_patches, self.embed_dim))
+        nn.init.trunc_normal_(self.pos_embed, std=0.02)
+        nn.init.trunc_normal_(self.cls_token, std=0.02)
         self.pos_drop = nn.Dropout(p=0.0)
 
         self.blocks = nn.ModuleList([
