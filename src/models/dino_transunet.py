@@ -147,8 +147,11 @@ class DINOTransUNet(nn.Module):
             self._freeze_encoder()
 
         # --- Feature projectors for skip connections ---
-        # Skip connections at different transformer depths, projected to
-        # decreasing channel dims to feed the decoder
+        # All transformer layers produce embed_dim tokens at the same resolution (h, w).
+        # We project them to different channel dims for the decoder.
+        # skip_layers = [3, 6, 9, 12] → projectors produce [256, 128, 64, 32] channels
+        # But all at the same spatial resolution (H/16, W/16).
+        # The decoder upsamples progressively while fusing these features.
         self.projectors = nn.ModuleList()
         for i, layer_idx in enumerate(self.skip_layers):
             out_ch = decoder_channels[i] if i < len(decoder_channels) else decoder_channels[-1]
@@ -163,35 +166,15 @@ class DINOTransUNet(nn.Module):
         )
 
         # --- Decoder ---
-        # Decoder takes the deepest skip and progressively upsamples
-        self.decoder_blocks = nn.ModuleList()
-
-        # First decoder: bottleneck (deepest projector output) → upsample
-        # Subsequent decoders concatenate with shallower skip connections
-        dec_in = decoder_channels[0]  # From deepest projector
-        for i in range(len(decoder_channels)):
-            if i == 0:
-                # First block: no skip, just upsample from bottleneck
-                skip_ch = decoder_channels[1] if len(decoder_channels) > 1 else 0
-                self.decoder_blocks.append(
-                    _DecoderBlock(dec_in, skip_ch, decoder_channels[1] if len(decoder_channels) > 1 else dec_in)
-                )
-                dec_in = decoder_channels[1] if len(decoder_channels) > 1 else dec_in
-            elif i < len(decoder_channels) - 1:
-                skip_ch = decoder_channels[i + 1]
-                out_ch = decoder_channels[i + 1]
-                self.decoder_blocks.append(_DecoderBlock(dec_in, skip_ch, out_ch))
-                dec_in = out_ch
-            else:
-                # Last decoder block: skip from stem_conv (64 channels)
-                self.decoder_blocks.append(_DecoderBlock(dec_in, 64, 32))
-                dec_in = 32
-
-        # Final upsample to original resolution
-        self.final_up = nn.Sequential(
-            nn.Upsample(scale_factor=2, mode="bilinear", align_corners=False),
-            _ConvBNReLU(32, 32),
-        )
+        # All skip features are at H/16 resolution. We upsample 4 times to reach H.
+        # Stage 0: deepest (256ch) → upsample → concat layer9 (128ch) → conv → 128ch  (H/8)
+        # Stage 1: 128ch → upsample → concat layer6 (64ch) → conv → 64ch             (H/4)
+        # Stage 2: 64ch → upsample → concat layer3 (32ch) → conv → 32ch              (H/2)
+        # Stage 3: 32ch → upsample → concat stem (64ch) → conv → 32ch                (H)
+        self.dec0 = _DecoderBlock(decoder_channels[0], decoder_channels[1], decoder_channels[1])
+        self.dec1 = _DecoderBlock(decoder_channels[1], decoder_channels[2], decoder_channels[2])
+        self.dec2 = _DecoderBlock(decoder_channels[2], decoder_channels[3], decoder_channels[3])
+        self.dec3 = _DecoderBlock(decoder_channels[3], 64, 32)  # 64 from stem_conv
 
         # --- Output head ---
         self.head = nn.Sequential(
@@ -307,14 +290,15 @@ class DINOTransUNet(nn.Module):
 
     def _init_decoder_weights(self):
         """Initialize decoder and output head."""
-        for m in self.decoder_blocks.modules():
-            if isinstance(m, nn.Conv2d):
-                nn.init.kaiming_normal_(m.weight, mode="fan_out", nonlinearity="relu")
-                if m.bias is not None:
+        for dec in [self.dec0, self.dec1, self.dec2, self.dec3]:
+            for m in dec.modules():
+                if isinstance(m, nn.Conv2d):
+                    nn.init.kaiming_normal_(m.weight, mode="fan_out", nonlinearity="relu")
+                    if m.bias is not None:
+                        nn.init.zeros_(m.bias)
+                elif isinstance(m, nn.BatchNorm2d):
+                    nn.init.ones_(m.weight)
                     nn.init.zeros_(m.bias)
-            elif isinstance(m, nn.BatchNorm2d):
-                nn.init.ones_(m.weight)
-                nn.init.zeros_(m.bias)
 
         for m in self.projectors.modules():
             if isinstance(m, nn.Linear):
@@ -380,29 +364,23 @@ class DINOTransUNet(nn.Module):
 
         # Decoder: deepest skip first, progressively upsample
         # skip_features: [layer3_feat, layer6_feat, layer9_feat, layer12_feat]
-        # Reverse so we start from deepest
-        skip_features = list(reversed(skip_features))
+        # All at same resolution (h, w) = (H/16, W/16)
+        # Reverse: [layer12(256ch), layer9(128ch), layer6(64ch), layer3(32ch)]
+        s12, s9, s6, s3 = skip_features[3], skip_features[2], skip_features[1], skip_features[0]
 
-        x = skip_features[0]  # Deepest features
+        # Progressive upsample: H/16 → H/8 → H/4 → H/2 → H
+        x = self.dec0(s12, s9)     # (B, 128, h*2, w*2)
+        x = self.dec1(x, s6)       # (B, 64, h*4, w*4)
+        x = self.dec2(x, s3)       # (B, 32, h*8, w*8)
 
-        for i, dec_block in enumerate(self.decoder_blocks):
-            if i + 1 < len(skip_features):
-                skip = skip_features[i + 1]
-            elif i == len(self.decoder_blocks) - 1:
-                # Last block: use stem skip, downsample to match
-                skip = F.interpolate(
-                    stem_skip, size=x.shape[2:] if x.shape[2] * 2 <= H else (H, W),
-                    mode="bilinear", align_corners=False,
-                )
-                skip = F.adaptive_avg_pool2d(stem_skip, (x.shape[2] * 2, x.shape[3] * 2))
-            else:
-                skip = None
-            x = dec_block(x, skip)
+        # Downsample stem_skip to match decoder resolution for final concat
+        stem_ds = F.interpolate(stem_skip, size=(x.shape[2] * 2, x.shape[3] * 2),
+                                mode="bilinear", align_corners=False)
+        x = self.dec3(x, stem_ds)  # (B, 32, h*16, w*16)
 
-        # Final upsample to original resolution
+        # Ensure output matches input resolution
         if x.shape[2:] != (H, W):
             x = F.interpolate(x, size=(H, W), mode="bilinear", align_corners=False)
-            x = _ConvBNReLU(x.size(1), 32).to(x.device)(x)
 
         return self.head(x)
 
