@@ -148,13 +148,14 @@ class DINOTransUNet(nn.Module):
 
         # --- Feature projectors for skip connections ---
         # All transformer layers produce embed_dim tokens at the same resolution (h, w).
-        # We project them to different channel dims for the decoder.
-        # skip_layers = [3, 6, 9, 12] → projectors produce [256, 128, 64, 32] channels
-        # But all at the same spatial resolution (H/16, W/16).
-        # The decoder upsamples progressively while fusing these features.
+        # Deepest layer (layer12) gets the MOST channels (decoder starts wide).
+        # skip_layers = [3, 6, 9, 12]
+        # projectors produce: [32, 64, 128, 256] — reversed decoder_channels
+        # so layer12→256ch (deepest/widest), layer3→32ch (shallowest/narrowest)
+        proj_channels = list(reversed(decoder_channels))  # [32, 64, 128, 256]
         self.projectors = nn.ModuleList()
         for i, layer_idx in enumerate(self.skip_layers):
-            out_ch = decoder_channels[i] if i < len(decoder_channels) else decoder_channels[-1]
+            out_ch = proj_channels[i] if i < len(proj_channels) else proj_channels[-1]
             self.projectors.append(
                 _FeatureProjector(self.embed_dim, out_ch, grid_size=0)
             )
@@ -363,10 +364,9 @@ class DINOTransUNet(nn.Module):
         tokens = self.norm(tokens)
 
         # Decoder: deepest skip first, progressively upsample
-        # skip_features: [layer3_feat, layer6_feat, layer9_feat, layer12_feat]
+        # skip_features: [layer3(32ch), layer6(64ch), layer9(128ch), layer12(256ch)]
         # All at same resolution (h, w) = (H/16, W/16)
-        # Reverse: [layer12(256ch), layer9(128ch), layer6(64ch), layer3(32ch)]
-        s12, s9, s6, s3 = skip_features[3], skip_features[2], skip_features[1], skip_features[0]
+        s3, s6, s9, s12 = skip_features[0], skip_features[1], skip_features[2], skip_features[3]
 
         # Progressive upsample: H/16 → H/8 → H/4 → H/2 → H
         x = self.dec0(s12, s9)     # (B, 128, h*2, w*2)
