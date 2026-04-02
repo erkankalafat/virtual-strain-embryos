@@ -4,11 +4,13 @@ from .pix2pixhd import Pix2PixHD
 from .diffusion import ConditionalDDPM
 from .style_transfer import AdaINStyleTransfer
 from .convnext_unet import ConvNeXtUNet
+from .dino_transunet import DINOTransUNet
 
 MODEL_REGISTRY = {
     "transunet": TransUNetRegressor,
     "swin_unet": SwinUNetRegressor,
     "convnext_unet": ConvNeXtUNet,
+    "dino_transunet": DINOTransUNet,
     "pix2pixhd": Pix2PixHD,
     "diffusion": ConditionalDDPM,
     "adain": AdaINStyleTransfer,
