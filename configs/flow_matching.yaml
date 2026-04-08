@@ -1,0 +1,46 @@
+# Conditional Flow Matching for Virtual Staining
+# Uses a pretrained 133M VelocityUNet (trained on 448px human embryo
+# timelapse, unconditional flow matching) as the backbone.
+# python -m src.train --config configs/flow_matching.yaml
+
+model:
+  name: flow_matching
+  in_channels: 3                 # BF channels (will be converted to grayscale internally)
+  out_channels: 2                # DAPI + Phalloidin
+  base_channels: 96              # Must match pretrained checkpoint
+  channel_multipliers: [1, 2, 4, 8]
+  num_res_blocks: 2
+  time_emb_dim: 512
+  num_heads: 12                  # Must match pretrained
+  dropout: 0.1
+  multi_scale_attention: true
+  sigma_min: 1.0e-4
+  ema_decay: 0.995
+  pretrained_checkpoint: null    # Set to path of your flow matching checkpoint
+
+data:
+  root_dir: /content/drive/MyDrive/embryo_data
+  target_channels: both
+  img_size: 448                  # Match pretrained resolution
+  batch_size: 4
+  num_workers: 0
+  val_split: 0.15
+  test_split: 0.10
+  seed: 42
+
+loss:
+  type: l1                       # Not used — flow matching has its own loss
+
+optimizer:
+  lr: 1.0e-4                     # Lower LR for fine-tuning pretrained model
+  weight_decay: 1.0e-2
+
+training:
+  epochs: 100
+  amp: false
+  output_dir: outputs
+  save_every: 10
+  patience: 30
+  preview_every: 10
+  warmup_epochs: 2
+  sampling_steps: 50             # Midpoint integration steps at inference

@@ -5,6 +5,7 @@ from .diffusion import ConditionalDDPM
 from .style_transfer import AdaINStyleTransfer
 from .convnext_unet import ConvNeXtUNet
 from .dino_transunet import DINOTransUNet
+from .flow_matching import ConditionalFlowMatching
 
 MODEL_REGISTRY = {
     "transunet": TransUNetRegressor,
@@ -13,6 +14,7 @@ MODEL_REGISTRY = {
     "dino_transunet": DINOTransUNet,
     "pix2pixhd": Pix2PixHD,
     "diffusion": ConditionalDDPM,
+    "flow_matching": ConditionalFlowMatching,
     "adain": AdaINStyleTransfer,
 }
 

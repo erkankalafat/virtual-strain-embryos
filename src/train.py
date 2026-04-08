@@ -12,6 +12,7 @@ Supports: TransUNet, SwinUNet (regression), Pix2PixHD (GAN), DDPM (diffusion), A
 """
 
 import argparse
+import math
 import os
 import json
 import time
@@ -639,6 +640,161 @@ def train_diffusion(config):
     return history
 
 
+def train_flow_matching(config):
+    """Training loop for Conditional Flow Matching.
+
+    Similar to diffusion but uses velocity prediction loss and performs
+    EMA updates after each optimizer step. Sampling uses midpoint
+    integration (typically 20-50 steps).
+    """
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Device: {device}")
+
+    train_loader, val_loader, _ = get_dataloaders(config)
+    print(f"Train: {len(train_loader.dataset)}, Val: {len(val_loader.dataset)}")
+
+    model = build_model(config).to(device)
+    total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"Conditional Flow Matching | Params: {total_params:,}")
+
+    opt_cfg = config.get("optimizer", {})
+    optimizer = optim.AdamW(
+        model.parameters(),
+        lr=opt_cfg.get("lr", 1e-4),
+        weight_decay=opt_cfg.get("weight_decay", 1e-2),
+    )
+
+    # Warmup + cosine schedule
+    epochs = config["training"]["epochs"]
+    steps_per_epoch = len(train_loader)
+    warmup_epochs = config["training"].get("warmup_epochs", 2)
+    warmup_steps = warmup_epochs * steps_per_epoch
+    total_steps = epochs * steps_per_epoch
+
+    def lr_lambda(step):
+        if step < warmup_steps:
+            return step / max(1, warmup_steps)
+        progress = (step - warmup_steps) / max(1, total_steps - warmup_steps)
+        return 0.5 * (1.0 + math.cos(math.pi * progress))
+
+    scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda)
+
+    output_dir = Path(config["training"].get("output_dir", "outputs")) / "flow_matching"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    best_val_loss = float("inf")
+    history = HistoryTracker()
+    patience = config["training"].get("patience", 30)
+    early_stop = EarlyStopping(patience=patience)
+    num_sampling_steps = config["training"].get("sampling_steps", 50)
+
+    epoch_pbar = tqdm(range(1, epochs + 1), desc="Flow Matching Training", unit="epoch")
+    for epoch in epoch_pbar:
+        model.train()
+        epoch_loss = 0.0
+
+        batch_pbar = tqdm(train_loader, desc=f"Epoch {epoch}/{epochs}",
+                          leave=False, unit="batch")
+        for batch in batch_pbar:
+            bf = batch["bf"].to(device)
+            target = batch["target"].to(device)
+
+            optimizer.zero_grad()
+            loss = model.training_loss(target, bf)
+
+            if torch.isnan(loss) or torch.isinf(loss):
+                tqdm.write(f"  WARNING: NaN/Inf loss, skipping batch")
+                continue
+
+            loss.backward()
+            nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+            optimizer.step()
+            scheduler.step()
+
+            # EMA update (critical for flow matching sample quality)
+            model.ema_update()
+
+            epoch_loss += loss.item()
+            batch_pbar.set_postfix(loss=f"{loss.item():.4f}",
+                                   lr=f"{scheduler.get_last_lr()[0]:.2e}")
+
+        avg_loss = epoch_loss / max(len(train_loader), 1)
+
+        # Validation
+        model.eval()
+        val_loss = 0.0
+        val_metrics = MetricTracker()
+
+        with torch.no_grad():
+            for i, batch in enumerate(val_loader):
+                bf = batch["bf"].to(device)
+                target = batch["target"].to(device)
+
+                loss = model.training_loss(target, bf)
+                val_loss += loss.item()
+
+                # Generate samples only on first val batch (expensive)
+                if i == 0:
+                    sampled = model.sample(
+                        bf[:2], method="midpoint",
+                        num_steps=num_sampling_steps, use_ema=True,
+                    )
+                    val_metrics.update(compute_metrics(sampled, target[:2]))
+                    save_sample_images(sampled, target[:2], bf[:2], epoch,
+                                       str(output_dir / "samples"))
+                    preview_every = config["training"].get("preview_every", 10)
+                    if epoch % preview_every == 0 or epoch == 1:
+                        show_inline_samples(sampled, target[:2], bf[:2], epoch, n_samples=2)
+
+        avg_val_loss = val_loss / max(len(val_loader), 1)
+        v = val_metrics.summary()
+
+        history.log(epoch,
+                    train_loss=avg_loss,
+                    val_loss=avg_val_loss,
+                    sample_psnr=v.get("psnr", 0),
+                    sample_ssim=v.get("ssim", 0))
+
+        epoch_pbar.set_postfix(
+            train=f"{avg_loss:.4f}",
+            val=f"{avg_val_loss:.4f}",
+            psnr=f"{v.get('psnr', 0):.2f}",
+            ssim=f"{v.get('ssim', 0):.4f}",
+            lr=f"{scheduler.get_last_lr()[0]:.2e}",
+        )
+
+        if avg_val_loss < best_val_loss:
+            best_val_loss = avg_val_loss
+            save_checkpoint({
+                "epoch": epoch,
+                "model_state": model.state_dict(),
+                "ema_state": model.ema_unet.state_dict(),
+                "val_loss": avg_val_loss,
+                "val_metrics": v,
+                "config": config,
+            }, str(output_dir / "best_model.pth"))
+            tqdm.write(f"  Epoch {epoch}: Best model saved (val_loss: {avg_val_loss:.4f})")
+
+        if epoch % config["training"].get("save_every", 10) == 0:
+            save_checkpoint({
+                "epoch": epoch,
+                "model_state": model.state_dict(),
+                "ema_state": model.ema_unet.state_dict(),
+                "config": config,
+            }, str(output_dir / f"checkpoint_epoch_{epoch:03d}.pth"))
+
+        if epoch % 5 == 0 or epoch == epochs:
+            history.plot()
+
+        if early_stop.step(avg_val_loss):
+            tqdm.write(f"\n  Early stopping at epoch {epoch} (no improvement for {patience} epochs)")
+            history.plot()
+            break
+
+    print(f"\nFlow Matching training complete. Best val loss: {best_val_loss:.4f}")
+    return history
+
+
 def train_style_transfer(config):
     """Training loop for AdaIN/EFDM style transfer."""
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -767,6 +923,7 @@ TRAIN_FN_MAP = {
     "dino_transunet": train_regression,
     "pix2pixhd": train_gan,
     "diffusion": train_diffusion,
+    "flow_matching": train_flow_matching,
     "adain": train_style_transfer,
 }
 
